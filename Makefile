@@ -26,10 +26,10 @@ pdf: main.pdf
 all: ps pdf
 
 clean: 
-	rm -f *.{log,aux,toc,bbl,blg,slo,srs}
+	rm -f *.log *.aux *.toc *.bbl *.blg *.slo *.srs *.out
 
 dist-clean:
-	rm -f *.{log,aux,dvi,toc,bbl,blg,slo,srs} main.ps main.pdf
+	rm -f *.log *.aux *.toc *.bbl *.blg *.slo *.srs *.out main.ps main.pdf
 
 booklet: main.ps
 	cat main.ps | psbook | psnup -2 >main-booklet.ps
