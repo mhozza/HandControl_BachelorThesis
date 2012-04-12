@@ -1,0 +1,34 @@
+\chapter{Implementácia}\label{chap:implementation}
+
+V tejto kapitole predstavíme triedy a popíšeme implementačné detaily 
+\bigskip
+
+\section{Základné triedy}
+\subsection{HCImage, ColorImage, GrayScaleImage}
+
+Pre účely aplikácie potrebujeme špecifickú triedu na obrázky, ktorá spĺňa nasledujúce vlastnosti:
+\begin{itemize}
+\item Rýchly prístup k jednotlivým pixlom.
+\item Vystrihnutie(crop)
+\item Škálovanie
+\item Maskovanie
+\end{itemize}
+Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie.
+
+Trieda HCImage, je abstraktná trieda ktorá implementuje základné veci, ktoré sú nezávislé na type pixelu. Od tejto triedy potom dedia triedy GrayScaleImage a ColorImage. Tieto implementujú metódy, ktoré sú závislé na type pixla. 
+
+%V ďalšom texte sa budeme venovať jednotliv
+
+\subsubsection{Vystrihnutie}
+Na vystrihnutie slúži metóda {\tt copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
+
+\subsubsection{Škálovanie}
+Metóda {\tt scale(unsigned w, unsigned h)} využíva bilineárnu interpoláciu. Vypočíta súradnice nového bodu a pomocou susedných bodov z pôvodného obrázka vypočíta farbu.
+
+Bilineárna interpolácia má niekoľko výhod. Je stále dosť rýchla, pričom eliminuje kostrbatosť, ktorá môže mať výrazný vplyv pri použití Fourierovej transformácie.
+
+\subsubsection{Maskovanie}
+Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Metóda {\tt mask(HCImage *mask, bool invert = false)} využíva bitové operátory na urýchlenie výpočtu. Každý pixel skombinuje s pixlom masky. 
+
+\section{Získanie obrazu z webkamery}
+Na získanie obrazu z webkamery využijeme knižnicu 
