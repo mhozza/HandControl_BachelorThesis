@@ -1,6 +1,6 @@
 \chapter{Implementácia}\label{chap:implementation}
 
-V tejto kapitole predstavíme triedy a popíšeme implementačné detaily 
+V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily 
 \bigskip
 
 \section{Základné triedy}
@@ -8,12 +8,13 @@ V tejto kapitole predstavíme triedy a popíšeme implementačné detaily
 
 Pre účely aplikácie potrebujeme špecifickú triedu na obrázky, ktorá spĺňa nasledujúce vlastnosti:
 \begin{itemize}
-\item Rýchly prístup k jednotlivým pixlom.
+\item Rýchly prístup k~jednotlivým pixlom.
 \item Vystrihnutie(crop)
 \item Škálovanie
 \item Maskovanie
+\item Floodfill
 \end{itemize}
-Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie.
+Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie konverzia do rôznych formátov, ukladanie na disk a~iné.
 
 Trieda HCImage, je abstraktná trieda ktorá implementuje základné veci, ktoré sú nezávislé na type pixelu. Od tejto triedy potom dedia triedy GrayScaleImage a ColorImage. Tieto implementujú metódy, ktoré sú závislé na type pixla. 
 
@@ -23,12 +24,15 @@ Trieda HCImage, je abstraktná trieda ktorá implementuje základné veci, ktor�
 Na vystrihnutie slúži metóda {\tt copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
 
 \subsubsection{Škálovanie}
-Metóda {\tt scale(unsigned w, unsigned h)} využíva bilineárnu interpoláciu. Vypočíta súradnice nového bodu a pomocou susedných bodov z pôvodného obrázka vypočíta farbu.
+Metóda {\tt scale(unsigned w, unsigned h)} využíva bilineárnu interpoláciu. Vypočíta súradnice nového bodu a pomocou susedných bodov z~pôvodného obrázka vypočíta farbu.
 
 Bilineárna interpolácia má niekoľko výhod. Je stále dosť rýchla, pričom eliminuje kostrbatosť, ktorá môže mať výrazný vplyv pri použití Fourierovej transformácie.
 
 \subsubsection{Maskovanie}
-Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Metóda {\tt mask(HCImage *mask, bool invert = false)} využíva bitové operátory na urýchlenie výpočtu. Každý pixel skombinuje s pixlom masky. 
+Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Metóda {\tt mask(HCImage *mask, bool invert = false)} využíva bitové operátory na urýchlenie výpočtu. Každý pixel skombinuje s~pixlom masky. 
 
-\section{Získanie obrazu z webkamery}
-Na získanie obrazu z webkamery využijeme knižnicu 
+\subsubsection{Floodfill}
+Floodfill si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Floodfill používame na získanie masky v~metóde {\tt getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
+
+\section{Získanie obrazu z~webkamery}
+Na získanie obrazu z~webkamery využijeme knižnicu 
