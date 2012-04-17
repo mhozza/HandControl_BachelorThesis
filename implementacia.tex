@@ -1,10 +1,11 @@
 \chapter{Implementácia}\label{chap:implementation}
 
-V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily 
+V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily jednotlivých častí algoritmu.
+
+Budeme sa venovať základným triedam, riešeniam elementárnych vecí, detailom spacovania obrazu, rozpoznávaniu ruky a gesta. Podrobne si popíšeme implementáciu neurónových sietí.
 \bigskip
 
-\section{Základné triedy}
-\subsection{HCImage, ColorImage, GrayScaleImage}
+\section{Triedy pre obrázky}
 
 Pre účely aplikácie potrebujeme špecifickú triedu na obrázky, ktorá spĺňa nasledujúce vlastnosti:
 \begin{itemize}
@@ -35,4 +36,14 @@ Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovp
 Floodfill si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Floodfill používame na získanie masky v~metóde {\tt getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
 
 \section{Získanie obrazu z~webkamery}
-Na získanie obrazu z~webkamery využijeme knižnicu 
+Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z programu Kapture(\url{http://kapture.berlios.de/}) a ktorú sme upravili pre potreby využitia v našej aplikácii. Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať  obrázok do niektorej z tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V prípade čiernobieleho obrázka iba zoberieme zložku Y.
+
+\section{Simulácia stlačenia kláves}
+Knižnica Xtst poskytuje funkciu {\tt XTestFakeKeyEvent}. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
+
+\section{Spracovanie obrazu}
+
+
+\section{Rozpoznanie ruky}
+
+\section{Rozpoznanie gesta}
