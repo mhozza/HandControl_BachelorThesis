@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg height="380" version="1.1" width="705" xmlns="http://www.w3.org/2000/svg">
+<svg height="380" version="1.1" width="709" xmlns="http://www.w3.org/2000/svg">
 <ellipse cx="22" cy="38" fill="#000000" rx="8.0" ry="8.0" stroke="#000000" stroke-width="1"/>
 <rect fill="#00ff" height="42" rx="44" ry="44" stroke="#00ff" stroke-width="1" width="194" x="63" y="15"/>
 <rect fill="#ffffff" height="44" rx="44" ry="44" stroke="#000000" stroke-width="1" width="196" x="62" y="14"/>
@@ -35,7 +35,7 @@ Detekcia ruky</text>
 <line fill="#000000" stroke="#000000" stroke-width="1" x1="567" x2="574" y1="90" y2="102"/>
 <line fill="#000000" stroke="#000000" stroke-width="1" x1="581" x2="574" y1="90" y2="102"/>
 <text font-family="Dialog" font-size="12" x="576" y="82">
-For each segment</text>
+Pre každý segment</text>
 <polygon fill="#ffffff" points="366,102 382,118 366,134 350,118" stroke="#ffffff" stroke-width="1"/>
 <polygon fill="none" points="366,102 382,118 366,134 350,118" stroke="#000000" stroke-width="1"/>
 <polyline fill="none" points="511,118 382,118" stroke="#000000" stroke-width="1"/>
