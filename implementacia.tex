@@ -20,7 +20,6 @@ Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné 
 Trieda HCImage, je abstraktná trieda ktorá implementuje základné veci, ktoré sú nezávislé na type pixelu. Od tejto triedy potom dedia triedy GrayScaleImage a ColorImage. Tieto implementujú metódy, ktoré sú závislé na type pixla. 
 
 %V ďalšom texte sa budeme venovať jednotliv
-
 \subsubsection{Vystrihnutie}
 Na vystrihnutie slúži metóda {\tt copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
 
@@ -38,12 +37,36 @@ Floodfill si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~gra
 \section{Získanie obrazu z~webkamery}
 Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z programu Kapture(\url{http://kapture.berlios.de/}) a ktorú sme upravili pre potreby využitia v našej aplikácii. Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať  obrázok do niektorej z tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
-\section{Simulácia stlačenia kláves}
-Knižnica Xtst poskytuje funkciu {\tt XTestFakeKeyEvent}. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
-
 \section{Spracovanie obrazu}
+\subsection{Trieda ImageProcessor}
+Trieda ImageProcessor má na starosti predspracovanie obrazu z webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede HandRecognizer. ImageProcessor využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda {\tt processImage(const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
+
+Spúštanie vláken je realizované pomocou funkcie {\tt QtConcurrent::run(Function function, ...)}, ktorá umožňuje spustiť funkciu s danými parametrami v novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v rôznych vláknach s rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
+
+\subsubsection{Krok 1: Príprava}
+Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Zapamätaný obrázok potom nahradíme novým.
+
+Na začiatku je pôvodný obrázok celý čierny. To nám však nevadí. 
+
+\subsubsection{Krok 2: Rozpitie}
+Označíme si dĺžku strany štvorca $k$.
+
+Triviálny algoritmus rozpitia - pre každý pixel vyrobíme okolo neho čierny štvorček - je časovo náročný - má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
+Efektívny algoritmus rozpitia treba robiť v 2 krokoch. Najskôr sa rozpije v $X$-ovom smere a potom v $Y$-ovom.
+
+Algoritmus pre $X$-ový smer funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
+Na začiatku je to 0. Pozeráme sa vždy o $\frac{k}{2}$ pixlov ďalej ako kreslíme.
+Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o $k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$. 
+
+Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne.
+
+Pre $Y$-ový smer je to analogické. 
 
 
 \section{Rozpoznanie ruky}
 
 \section{Rozpoznanie gesta}
+
+
+\section{Simulácia stlačenia kláves}
+Knižnica Xtst poskytuje funkciu {\tt XTestFakeKeyEvent}. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.

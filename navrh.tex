@@ -34,7 +34,7 @@ Odfiltrovanie šumu zabezpečí hranica. Všetky pixle svetlejšie ako určitá 
 Kvôli segmentácii potrebujeme aby jednotlivé segmenty boli súvislé. Teda aby obrys ruky tvoril jeden celok.
 Ľahko sa nám však môže stať, že obrys ruky je niekde prerušený - nedostatočná zmena, prípadne iné dôvody. Predpokladáme ale, že všetky časti jedného segmentu sú dostatočne blízko. Spojiť segmenty nám teda pomôže rozpitie pixlov. 
 
-%TODO spravnu konštantu
+%TODO spravnu konštantu, spomenut rozlisenie
 Z každého pixla spravíme štvorec s veľkosťou $11\times 11$.
 Hodnota 11 pre stranu štvorca sa ukázala ako najvhodnejšia. 
 Príliš veľké hodnoty spájajú aj časti, ktoré nepatria do toho istého segmentu, príliš malé zase nespoja časti, ktoré sú ďalej od seba.
