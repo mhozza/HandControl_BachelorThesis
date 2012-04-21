@@ -21,13 +21,13 @@ Každý z týchto segmentov sa predloží klasifikátoru, ktorý rozhodne, či d
 
 \subsection{Predspracovanie a segmentácia}\label{chap:preprocess}
 
-Základ pre predspracovanie a segmentáciu tvorí takzvaný rozdielový obraz. Rozdielový obraz je obraz, ktorý vznikne odčítaním 2 posebe idúcich čiernobielych obrázkov v absolútnej hodnote. Tento obraz obsahuje zmeny - pohybujúce sa objekty. Statické objekty sa tam teda nevyskytnú, čo nám umožní ich veľmi ľahko odfiltrovať. V tomto obraze sa vyskytnú obrysy pohybujúcich sa objektov, pretože ku zmenám dochádza najviac na hranách. Podľa rýchlosti pohybu môžu byť obrysy hrubšie, alebo tenšie. 
+Základ pre predspracovanie a segmentáciu tvorí takzvaný \textbf{rozdielový obraz}. Rozdielový obraz je obraz, ktorý vznikne odčítaním 2 posebe idúcich čiernobielych obrázkov v absolútnej hodnote. Tento obraz obsahuje zmeny - pohybujúce sa objekty. Statické objekty sa tam teda nevyskytnú, čo nám umožní ich veľmi ľahko odfiltrovať. V tomto obraze sa vyskytnú obrysy pohybujúcich sa objektov, pretože ku zmenám dochádza najviac na hranách. Podľa rýchlosti pohybu môžu byť obrysy hrubšie, alebo tenšie. 
 Našim cieľom je čo najlepšie zachytiť pohybujúcu sa ruku.
 
 Dohodneme sa, že najmenšia zmena (žiadna) bude znázornená bielou a najväčšia čiernou. 
 
 \subsubsection{Odfiltorvanie šumu}
-Odfiltrovanie šumu zabezpečí hranica. Všetky pixle svetlejšie ako určitá konštanta, budú vykreslené bielou. Ideálna hranica je taká, ktorá potlačí šum, ale zachová čo najviac z ostatných zmien - čiže by mala byť najmenšia možná. Pohybujeme sa v odtieˇnoch šetej, čiže hodnoty $0\dots 255$. Praktické testy ukázali, že vhodnou hodnotou pre hranicu je 7.
+Odfiltrovanie šumu zabezpečí hranica. Všetky pixle svetlejšie ako určitá konštanta, budú vykreslené bielou. Ideálna hranica je taká, ktorá potlačí šum, ale zachová čo najviac z ostatných zmien - čiže by mala byť najmenšia možná. Pohybujeme sa v odtieňoch šedej, čiže hodnoty $0\dots 255$. Praktické testy ukázali, že vhodnou hodnotou pre hranicu je 7.
 
 \subsubsection{Rozpitie pixlov}
 
@@ -39,9 +39,10 @@ Z každého pixla spravíme štvorec s veľkosťou $11\times 11$.
 Hodnota 11 pre stranu štvorca sa ukázala ako najvhodnejšia. 
 Príliš veľké hodnoty spájajú aj časti, ktoré nepatria do toho istého segmentu, príliš malé zase nespoja časti, ktoré sú ďalej od seba.
 
-\subsubsection{Segmentácia}
+\subsubsection{Segmentácia}\label{subsubsect:segment}
 Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi každými 2 susediacimi pixlami (v štyroch smeroch). Segmentácia je vlastne len nájdenie komonentov v tomto grafe. Na to môžeme použiť napríklad prehľadávanie do šírky. Samozrejme musíme ešte nájsť opísaný obdĺžnik - stačí nájsť najľvejší, najpravejší, najvrchnejší a najspodnejší bod segmentu.
 
 \subsection{Spracovanie segmentov}
+Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa.
 
 \section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
