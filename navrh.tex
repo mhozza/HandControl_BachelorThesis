@@ -6,7 +6,7 @@ V~tejto kapitole predstavíme základný algoritmus a postupne sa budeme venova�
 
 \section{Základný algoritmus}
 
-Základný algoritmus vyzerá nasledovne: 
+Základný algoritmus (Obr. \ref{fig:base_alg}) vyzerá nasledovne: 
 Najskôr sa získa obraz z webkamery. Ten sa potom spracuje a následne sa rozsegmentuje na jednotlivé pohybujúce sa objekty.
 Každý z týchto segmentov sa predloží klasifikátoru, ktorý rozhodne, či daný segment je, alebo nie je ruka. Zo všetkých segmentou je vybratý ten, o ktorom si je klasifikátor najviac istý, že je ruka (a zároveň spĺňa danú hranicu). Z vybratého segmentu sa vypoičíta bod, ktorý je braný ako pozícia ruky. Tento bod je pridaný do postupnosti bodov, o ktorých sa ďalej rozhodne, či tvoria niektoré gesto. Ak klasifikátor gesta detekuje nejaké gesto, vykoná sa príslušná akcia - simulácia stlačenia niektorej klávesy - a postupnosť sa vymaže. Ak sa dlhšiu dobu v obraze nevykonala žiadna zmena a klasifikátor gesta nezistil žiadne gesto, postupnosť sa tiež vymaže.
 
@@ -15,8 +15,8 @@ Každý z týchto segmentov sa predloží klasifikátoru, ktorý rozhodne, či d
 %    \includegraphics[scale=1]{img/00/extern-drive-encryption.1.mps}
     \includegraphics[width=\textwidth]{images/BaseAlgorithm}
 %    \includegraphics[scale=1]{images/BaseAlgorithm}
-    \label{fig:base_alg}
     \caption{Základný algoritmus}
+    \label{fig:base_alg}
 \end{figure}
 
 \subsection{Predspracovanie a segmentácia}\label{chap:preprocess}
@@ -46,3 +46,33 @@ Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi ka
 Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa.
 
 \section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
+
+V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predkladať neurónovej sieti, aby nám povedala, či je to ruka, alebo nie.
+
+\subsection{Pôvodný vs. rozdielový obrázok}
+Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
+
+Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých sa rozhoduje čo pridať do výberu a čo nie. Tieto parametre veľmi závisia od osvetlenia. Navyše osvetlenie sa môže meniť pri pohybe ruky, čo veľmi stažuje nastavenie správnych parametrov. Pred použitím aplikácie by sa aplikácia musela nakalibrovať, čo znižuje komfort jej použitia.
+
+Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívaťeľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
+
+Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka. Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky.
+\begin{table}[hp]
+\centering
+\begin{tabular}{|ll|c|c|}
+\hline
+\textbf{Sada} & & \textbf{Rozdielový obr.} & \textbf{Pôvodný obr.}\\ \hline
+Malá sada &- úspešnosť & 81 & 71\\ \hline
+Malá sada &- chyba & 81 & 71\\ \hline
+Veľká sada &- úspešnosť & 81 & 71\\ \hline
+Veľká sada &- chyba & 81 & 71 \\
+\hline
+\end{tabular}
+\caption{Porovnanie úspešnosti dát}
+\end{table}
+
+\subsection{Fourierova transformácia}
+Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
+
+Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel pomocou absolútnej hodnoty a následne normalizovaná.
+
