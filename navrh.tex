@@ -46,6 +46,7 @@ Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi ka
 Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa.
 
 \section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
+\label{sect:metodyzlepseniaklasifikacie}
 
 V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predkladať neurónovej sieti, aby nám povedala, či je to ruka, alebo nie.
 
@@ -68,11 +69,15 @@ Veľká sada &- úspešnosť & 81 & 71\\ \hline
 Veľká sada &- chyba & 81 & 71 \\
 \hline
 \end{tabular}
-\caption{Porovnanie úspešnosti dát}
+\caption{Porovnanie úspešnosti NS pri rôznych dátach}
 \end{table}
 
 \subsection{Fourierova transformácia}
 Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
 
 Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel pomocou absolútnej hodnoty a následne normalizovaná.
+
+Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine.
+
+Úspešnosť na testovacej množine bola mierne nižšia.
 
