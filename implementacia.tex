@@ -82,3 +82,18 @@ Trieda \textit{HandRecognizer} vyberie z fronty obdĺžnik čakajúci na spracov
 Knižnica \textit{Xtst} poskytuje funkciu {\tt XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
 
 \section{Pomocné programy}
+
+\subsubsection{Upravená verzia aplikácie}
+Upravená verzia aplikácie umožňuje jednoduché ukladanie dát na disk.
+
+\subsubsection{CreateFFT}
+
+\textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z obrázka. Ako parameter berie cestu k obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
+
+\subsubsection{NeuralNet}
+\textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
+
+Dáta máme v 2 oddelených adresároch v jednom sú dáta zodpovedajúce rukám, a v druhom ostatné. Programu potom dáme tieto adresáre a on si z nich vyrobí trénovaciu/testovaciu sadu.
+
+\subsubsection{Skripty}
+Pre zjednodušenie práce sme si napísali rôzne skripty na jednoduché spúštanie trénovania, testovania a na rozdelovanie vstupov do príslušných adresárov.
