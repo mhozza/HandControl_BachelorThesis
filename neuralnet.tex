@@ -47,18 +47,19 @@ Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vst
 
 \textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
 
-Experimentami sme našli vhodné počty neurónov a vrstiev. Zvolili sme architektúru s 1 skrytou vrstvou s 45 neurónmi. V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach a priemerná kvadratická chyba.
+Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
+% - 3vrstvovú sieť sa nám ani nepodarilo natrénovať 
+V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach a priemerná kvadratická chyba.
 
 \begin{table}[hp]
 \centering
-\begin{tabular}{|l|l|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-\textbf{Vrstvy} & \textbf{Neuróny} & \textbf{Úspešnosť} & \textbf{Chyba}\\ \hline
-2 & 40 & 81,11\% & 0,0818\\ \hline
-2 & 45 & --\% & --\\ \hline
-2 & 50 & 85,19\% & 0,0667\\ \hline
-2 & 60 & 85,19\% & 0,0634\\ \hline
-3 & 48; 12 & --\% & --\\
+\textbf{Počet neurónov} & \textbf{Úspešnosť} & \textbf{Chyba}\\ \hline
+40 & 81,11\% & 0,0818\\ \hline
+45 & 85.55\% & 0,0643\\ \hline
+50 & 85,19\% & 0,0667\\ \hline
+60 & 85,19\% & 0,0634\\ 
 \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti NS pri rôznych architektúrach}
@@ -85,18 +86,18 @@ Nevýhodou je to, že neuróny sú fixne pridelené na jednotlivé vstupy. V pô
 
 \begin{table}[hp]
 \centering
-\begin{tabular}{|l|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-\textbf{Neuróny} & \textbf{Úspešnosť} & \textbf{Chyba}\\ \hline
+\textbf{Počet neurónov} & \textbf{Úspešnosť} & \textbf{Chyba}\\ \hline
 48; 12 & 83,33\% & 0,0745\\ \hline
-112; 12 & --\% & --\\
+112; 12 & 84,07\% & 0,0714\\
 \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti NS pri rôznych architektúrach}
 \label{tab:neuroncountcmp2}
 \end{table}
 
-%TODO
-Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v 
+Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.
+%TODO popisat aj pocty pouzitych neuronou 
 
 \section{Rekurentná neurónová sieť}
