@@ -58,19 +58,6 @@ Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých
 Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívaťeľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
 
 Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka. Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky.
-\begin{table}[hp]
-\centering
-\begin{tabular}{|ll|c|c|}
-\hline
-\textbf{Sada} & & \textbf{Rozdielový obr.} & \textbf{Pôvodný obr.}\\ \hline
-Malá sada &- úspešnosť & 81 & 71\\ \hline
-Malá sada &- chyba & 81 & 71\\ \hline
-Veľká sada &- úspešnosť & 81 & 71\\ \hline
-Veľká sada &- chyba & 81 & 71 \\
-\hline
-\end{tabular}
-\caption{Porovnanie úspešnosti NS pri rôznych dátach}
-\end{table}
 
 \subsection{Fourierova transformácia}
 Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
@@ -81,3 +68,19 @@ Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transfo
 
 Úspešnosť na testovacej množine bola mierne nižšia.
 
+\begin{table}[hp]
+\catcode`\-=12 %kvoli babelu a pomlcke
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ & \multicolumn{2}{c|}{\textbf{Malá sada}} & \multicolumn{2}{c|}{\textbf{Veľká sada}} \\ 
+\cline{2-5}
+ & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba}\\ \hline
+\textbf{Rozdielový obr.} & & & &\\ \hline
+\textbf{Pôvodný obr.} & & & &\\ \hline
+\textbf{Rozdielový obr. FFT} & & & &\\ \hline
+\textbf{Pôvodný obr. FFT} & & & &\\
+\hline
+\end{tabular}
+\caption{Porovnanie úspešnosti NS pri rôznych dátach}
+\end{table}
