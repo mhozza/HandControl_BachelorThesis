@@ -50,7 +50,6 @@ Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú 
 %Neural Net
 \section{Návrh architektúry neurónovej siete}\label{chap:neuralnetarch}
 
-
 V tejto kapitole si popíšeme rôzne architektúry sietí, ktoré sme vyskúšali a porovnáme ich vlastnosti a úspešnosť pri riešení problému rozpoznania ruky a vyberieme vhodnú architektúru, ktorú potom použijeme v našej aplikácii.
 
 \subsection{Cieľ}
@@ -63,28 +62,21 @@ Neurónová sieť má rozdeliť vstupy do 2 tried - tie, ktoré zodpovedajú ruk
 
 Na generovanie dát sme použili upravenú verziu našej aplikácie, ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk. Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierovych transformácií\footnote{viď kapitola \ref{sect:metodyzlepseniaklasifikacie} } robili až dodatočne ďalšou aplikáciou.
 
-Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby. Viac sa o tomto algoritme dozviete v \cite{haykin1999neural} alebo \cite{kvasnicka1997uvod}. Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. Pre testovacie účely sme na trénovanie používali menšiu sadu, ktorá mala 340 vstupov.
+Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural} . Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
-%TODO" rekurentne siete
+Pri rekurentných sieťach sme predkladali postupnosti obrázkov, pričom sme zachovávali poradie obrázkov v postupnosti. Rekurentné vstupy sme updatli len v prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v reálnej aplikácii.
+
+Pre testovacie účely sme na trénovanie používali menšiu sadu, ktorá mala ??? vstupov. %TODO
 
 \subsection{Testovanie a vyhodnocovanie neurónových sietí}
 Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto veličinu.
 
 Kvadratická chyba sa počita takto: $\frac{1}{2}(t-o)^2$, kde $t$ je cieľová hodnota a $o$ je výstup siete. V tabuľkách budeme uvádzať priemernú kvadratickú chybu, ktorú budeme počitať ako súčet všetkých kvadratických chýb deleno počet testovacích vstupov. 
 
-Na testovanie sme mali množinu 269 vstupov, ktoré sme nepoužívali na trénovanie.
-
+Na testovanie sme mali množinu ??? vstupov, ktoré sme nepoužívali na trénovanie. %TODO
 
 
 \subsection{Viac vrstvová dopredná neurónová sieť}
-
-%\begin{figure}[hp]
-%  \begin{center}
-%    \includegraphics[width=0.3\textwidth]{images/ffnn}
-%  \end{center}
-%  \caption{Dopredná neurónová sieť}
-%  \label{fig:ffnn}
-%\end{figure}
 
 \textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
 
@@ -150,10 +142,7 @@ Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuro
 
 \subsection{Rekurentná neurónová sieť}
 
-
-Architektúra našej rekurentnej neurónovej siete vychádza z upravenej doprednej neurónovej siete, s tým, že namiesto obyčajného neurónu používame v niektorej vrstve rekurentný neurón (obr. \ref{fig:recurentneuron}) viac v \ref{chap:neuralnet}.
-
-Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný \textbf{updatenutý} výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
+Architektúra našej rekurentnej neurónovej siete vychádza z upravenej doprednej neurónovej siete, s tým, že namiesto obyčajného neurónu používame v niektorej vrstve rekurentný neurón (obr. \ref{fig:recurentneuron}) viac v kapitole \ref{chap:rnn}.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -191,28 +180,12 @@ Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktor�
 \subsection{Fourierova transformácia}
 Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
 
-Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel pomocou absolútnej hodnoty a následne normalizovaná.
+Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel ako absolútna hodnota z komplexného čísla a následne normalizovaná.
 
 Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine.
 
+%TODO
 Úspešnosť na testovacej množine bola mierne nižšia.
-% 
-% \begin{table}[hp]
-% \catcode`\-=12 %kvoli babelu a pomlcke
-% \centering
-% \begin{tabular}{|l|c|c|c|c|}
-% \hline
-%  & \multicolumn{2}{c|}{\textbf{Malá sada}} & \multicolumn{2}{c|}{\textbf{Veľká sada}} \\ 
-% \cline{2-5}
-%  & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba}\\ \hline
-% \textbf{Rozdielový obr.} & 82,22\% & 0,0725 & 83,70 \%& 0,069 \\ \hline
-% \textbf{Pôvodný obr.} & 74,81\% & 0,0918 & \%&\\ \hline
-% \textbf{Rozdielový obr. FFT} & 78,89\%& 0,0906& 71\%&\\ \hline
-% \textbf{Pôvodný obr. FFT} & 68.5185\%& 0,1323& \%&\\
-% \hline
-% \end{tabular}
-% \caption{Porovnanie úspešnosti NS pri rôznych dátach}
-% \end{table}
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
