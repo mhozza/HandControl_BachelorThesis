@@ -69,5 +69,31 @@ Viacvrstvová neurónová sieť vznikne spojením niekoľkých vrstiev. Nižšia
 
 Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z nich je napríklad funkcia xor \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
 
-\section{Algoritmus backpropagation (spätného šírenia chyby)}
+Viacvrstvové neuónové siete sa trénujeme algoritmom backpropagation\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
+
+\section{Rekurentná neurónová sieť}
+
+V predchádzajúcich podkapitolách sme sa zaoberali doprednými sieťami (feedforward), v ktorých sa informácia šírila len smerom od vstupov k výstupu. V rekurentných sieťach máme navyše rekurentné spojenia, cez ktoré sa informácia prenáša v čase. Informácia z jednotlivých neurónov môže byť v ďalšom kroku použitá ako vstupná informácia pre neuróny.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/recneuron}
+  \end{center}
+  \caption{Rekurentný neurón}
+  \label{fig:recurentneuron}
+\end{figure}
+
+Existuje veľké množstvo architektúr neurónových sietí, niektoré môžete nájsť v \cite[s. 755]{haykin1999neural}. My sme si vybrali oveľa jednoduchší model. Namiesto jednoduchých spojitých perceptrónov použijeme rekurentné neuróny (obr. \ref{fig:recurentneuron}).
+
+Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný \textbf{updatenutý} výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
+
+Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom backpropagation s tým, že sieti predkladáme postupnosti - vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie. Po každej postupnosti zresetujeme rekurentný vstup na 0.
+
+%TODO vysvetlit? 
+
+%\section{Algoritmus backpropagation (spätného šírenia chyby)}
+
+%Algoritmus funguje v 2 fázach. V prvej fáze sa klasickým spôsobom vypočíta výstup a k nemu prislúchajúca chyba.
+
+%V druhej fáze sa táto chyba spätne aplikuje na nižšie vrstvy, pričom je prenásobená príslušnou váhou -- t.j. ak máme neurón $y_i$ s chybou $e_i$ a $x_j$ je neurón, ktorý je $j$-tym vstupom neurónu $y_i$, tak ku chybe neurónu sa pripočíta $e_i w_{ij}$.
 
