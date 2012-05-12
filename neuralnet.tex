@@ -41,12 +41,16 @@ $$y= f\left(\sum_{i=1}^{n+1} w_i x_i \right)\qquad x_{n+1}=1$$
 
 Aktivačnou funkciou spojitého je sigmoida: 
 $$f(x) = \frac{1}{1+e^{-x}}$$
-Sigmoida bola vybratá preto, lebo spĺňa vlastnosti, ktoré má mať aktivačná funkcia.
+%Sigmoida bola vybratá preto, lebo spĺňa vlastnosti, ktoré má mať aktivačná funkcia.
 
-Takýto perceptrón robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
+Z matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
 
-%\section{Vrstva neurónovej siete}
+\section{Vrstva neurónovej siete}
 
-%\textbf{Vrstva neurónovej siete} sa skladá z niekoľkých jednoduchých spojitých perceptrónov (neurónov). Každý neurón sa aktivuje samostatne - nezávisle od ostatných.
+Niekoľko perceptrónov vieme spojiť do jednej vrstvy. Získame tým vačší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach.
 
-%Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
+Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle, takže z praktického hľadiska je to skupina neurónov pracujúcich nad tým istým vstupom.
+
+Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
+
+\section{Viacvrstvová neurónová sieť}
