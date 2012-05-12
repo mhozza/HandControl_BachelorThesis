@@ -27,7 +27,7 @@ Keďže \textit{umelé neurónové siete} sú významnou časťou tejto práce, 
 Jednoduchý perceptrón je inšpirovaný nervovou bunkou - neurónom. Vstupy umelého neurónu zodpovedajú \textit{dendridom}, výstup zodpovedá \textit{axónu}. 
 Transformáciu vstupu na výstup zabezpečuje aktivačná funkcia.
 
-Keď si neurón predstavíme ako orientovaný graf, za vrcholy položíme, vstupy, výstup a ,,telo" neurónu, vzniknú nám 2 typy hrán.
+Keď si neurón predstavíme ako orientovaný graf (Obr. \ref{fig:neuron}), za vrcholy položíme, vstupy, výstup a ,,telo" neurónu, vzniknú nám 2 typy hrán.
 \begin{enumerate}
 \item Synaptické -- vstup $\rightarrow$ neurón -- lineárna input-output väzba, kde pôvodný signál $x_i$ prenásobíme váhou synapsy $w_i$ a tým dostaneme výsledný signál $x_i'$.
 
@@ -37,10 +37,12 @@ Keď si neurón predstavíme ako orientovaný graf, za vrcholy položíme, vstup
 K vstupom treba pridať ešte jeden vstup -- \textit{bias} -- ktorý má vždy hodnotu 1. Jeho význam je pri vstupe so samými nulami, pretože vtedy hodnoty na synapsách ostanú nezmenené a perceptrón by sa tento vzor nevedel naučiť.
 
 Nech $n$ je počet vstupov a  $f$ je aktivačná funkcia. Výsledný signál $y$ dostaneme takto:
-$$y= f\left(\sum_{i=1}^{n+1} w_i x_i \right)\qquad x_{n+1}=1$$
+
+$$y= f\left(\sum_{i=1}^{n+1} w_i x_i \right)\qquad x_{n+1}=1$$\medskip
 
 Aktivačnou funkciou spojitého je sigmoida: 
-$$f(x) = \frac{1}{1+e^{-x}}$$
+
+$$f(x) = \frac{1}{1+e^{-x}}$$\medskip
 %Sigmoida bola vybratá preto, lebo spĺňa vlastnosti, ktoré má mať aktivačná funkcia.
 
 Z matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
@@ -53,4 +55,19 @@ Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle,
 
 Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
 
-\section{Viacvrstvová neurónová sieť}
+\section{Viacvrstvová dopredná neurónová sieť}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{images/ffnn}
+  \end{center}
+  \caption{Dopredná neurónová sieť}
+  \label{fig:ffnn}
+\end{figure}
+
+Viacvrstvová neurónová sieť vznikne spojením niekoľkých vrstiev. Nižšia vrstva tvorí vstup pre vyššiu (obr. \ref{fig:ffnn}). Pôvodný vstup je vstupom pre najnižšiu vrstvu.
+
+Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z nich je napríklad funkcia xor \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
+
+\section{Algoritmus backpropagation (spätného šírenia chyby)}
+

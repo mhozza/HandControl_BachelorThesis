@@ -50,7 +50,7 @@ Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú 
 %Neural Net
 \section{Návrh architektúry neurónovej siete}\label{chap:neuralnetarch}
 
-%Keďže \textit{umelá neurónová sieť} je významnou časťou tejto práce, venujeme jej samostatnú kapitolu. 
+
 V tejto kapitole si popíšeme rôzne architektúry sietí, ktoré sme vyskúšali a porovnáme ich vlastnosti a úspešnosť pri riešení problému rozpoznania ruky a vyberieme vhodnú architektúru, ktorú potom použijeme v našej aplikácii.
 
 \subsection{Cieľ}
@@ -74,27 +74,17 @@ Kvadratická chyba sa počita takto: $\frac{1}{2}(t-o)^2$, kde $t$ je cieľová 
 
 Na testovanie sme mali množinu 269 vstupov, ktoré sme nepoužívali na trénovanie.
 
-%\subsection{Jednoduchý spojitý perceprtón}
 
-%\textbf{Jednoduchý spojitý perceprtón} je základnou jednotkou našich neurónových sietí a plní úlohu neurónu. Aktivačnou funkciou je sigmoida: $f(x) = \frac{1}{1+e^{-x}}$, kde $x$ je váhovaná suma vstupov. Viac o neurónových sieťach môžete nájsť napríklad v \cite{haykin1999neural}. 
-
-%Takýto perceptrón robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)$, kde $n$ je rozmer vstupu.
-
-%\subsection{Vrstva neurónovej siete}
-
-%\textbf{Vrstva neurónovej siete} sa skladá z niekoľkých jednoduchých spojitých perceptrónov (neurónov). Každý neurón sa aktivuje samostatne - nezávisle od ostatných.
-
-%Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
 
 \subsection{Viac vrstvová dopredná neurónová sieť}
 
-\begin{figure}[hp]
-  \begin{center}
-    \includegraphics[width=0.3\textwidth]{images/ffnn}
-  \end{center}
-  \caption{Dopredná neurónová sieť}
-  \label{fig:ffnn}
-\end{figure}
+%\begin{figure}[hp]
+%  \begin{center}
+%    \includegraphics[width=0.3\textwidth]{images/ffnn}
+%  \end{center}
+%  \caption{Dopredná neurónová sieť}
+%  \label{fig:ffnn}
+%\end{figure}
 
 \textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
 
