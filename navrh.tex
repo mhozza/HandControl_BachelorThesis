@@ -45,8 +45,6 @@ Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi ka
 \subsection{Spracovanie segmentov}
 Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa.
 
-%TODO popísať normalizáciu
-
 %Neural Net
 \section{Návrh architektúry neurónovej siete}\label{chap:neuralnetarch}
 
@@ -64,17 +62,16 @@ Na generovanie dát sme použili upravenú verziu našej aplikácie, ktorá umo�
 
 Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural} . Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
-Pri rekurentných sieťach sme predkladali postupnosti obrázkov, pričom sme zachovávali poradie obrázkov v postupnosti. Rekurentné vstupy sme updatli len v prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v reálnej aplikácii.
+Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v postupnosti. Rekurentné vstupy sme updatli len v prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v reálnej aplikácii.
 
-Pre testovacie účely sme na trénovanie používali menšiu sadu, ktorá mala ??? vstupov. %TODO
+Na trénovanie sme použili dáta fourierovych transformácií (viď \ref{sect:ft}). Množina dát obsahovala cca 800 vzorov, ktoré boli pri trénovaní rekurentnej neurónovej siete rozdelené do približne 70 postupností.
 
 \subsection{Testovanie a vyhodnocovanie neurónových sietí}
 Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto veličinu.
 
 Kvadratická chyba sa počita takto: $\frac{1}{2}(t-o)^2$, kde $t$ je cieľová hodnota a $o$ je výstup siete. V tabuľkách budeme uvádzať priemernú kvadratickú chybu, ktorú budeme počitať ako súčet všetkých kvadratických chýb deleno počet testovacích vstupov. 
 
-Na testovanie sme mali množinu ??? vstupov, ktoré sme nepoužívali na trénovanie. %TODO
-
+Na testovanie sme mali množinu cca 650 vzorov (60 postupností), ktoré sme nepoužívali na trénovanie.
 
 \subsection{Viac vrstvová dopredná neurónová sieť}
 
@@ -166,7 +163,11 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predkladať neurónovej sieti, aby nám povedala, či je to ruka, alebo nie.
 
 \subsection{Normalizácia dát}
-%TODO
+Ideálne vstupy pre neurónovú sieť sú z intervalu $<0,1>$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
+
+$$f(x)=\frac{1}{1+x}$$
+
+Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. %TODO dôvod? 
 
 \subsection{Pôvodný vs. rozdielový obrázok}
 Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
@@ -175,17 +176,17 @@ Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých
 
 Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívaťeľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
 
-Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka (tabuľka \ref{tab:neuraldatacmp}). Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky.
+Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka (tabuľka \ref{tab:neuraldatacmp}). Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky. Pri vyhodnocovaní tejto časti sme použili menšiu trénovaciu a testovaciu sadu, ktorá obsahovala cca 350 trénovacích a 300 testovacích vzorov. Sada neobsahovala zle vybraté ruky.
 
-\subsection{Fourierova transformácia}
+\subsection{Fourierova transformácia} \label{sect:ft}
 Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
 
 Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel ako absolútna hodnota z komplexného čísla a následne normalizovaná.
 
-Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine.
+Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine. 
 
 %TODO
-Úspešnosť na testovacej množine bola mierne nižšia.
+%Úspešnosť na testovacej množine bola mierne nižšia.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke

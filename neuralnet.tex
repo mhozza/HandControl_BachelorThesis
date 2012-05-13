@@ -85,7 +85,7 @@ V predchádzajúcich podkapitolách sme sa zaoberali doprednými sieťami (feedf
 
 Existuje veľké množstvo architektúr neurónových sietí, niektoré môžete nájsť v \cite[s. 755]{haykin1999neural}. My sme si vybrali oveľa jednoduchší model. Namiesto jednoduchých spojitých perceptrónov použijeme rekurentné neuróny (obr. \ref{fig:recurentneuron}).
 
-Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný \textbf{updatenutý} výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
+Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný updatenutý výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
 
 Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom backpropagation s tým, že sieti predkladáme postupnosti - vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie. Po každej postupnosti zresetujeme rekurentný vstup na 0.
 

@@ -29,8 +29,14 @@
 \def\mffakulta{Fakulta Matematiky, Fyziky a Informatiky}
 % \ifx\pdfoutput\undefined\relax\else\pdfinfo{ /Title (\mftitle) /Author (\mfauthor) /Creator (PDFLaTeX) } \fi
 
-
-
+\ifpdf
+  \pdfinfo{
+    /Title (\mftitle)
+    /Author (\mfauthor)
+    /Creator (PDFLaTeX)
+  }
+\else
+\fi
 
 \begin{document}
 
@@ -183,6 +189,8 @@ a pripomienky, priateľke, blízkym priateľom a rodine za morálnu podporu.
 % ~\vfill\eject % EOP vi % zadna strana prehlasenia je prazdna
 
 \tableofcontents
+\listoffigures
+\listoftables
 
 \mainmatter
 
