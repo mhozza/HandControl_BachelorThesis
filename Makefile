@@ -25,6 +25,9 @@ pdf: main.pdf
 
 all: ps pdf
 
+final: pdf
+	cp main.pdf hozza-bc.pdf
+
 clean: 
 	rm -f *.log *.aux *.toc *.bbl *.blg *.slo *.srs *.out
 

@@ -3,10 +3,14 @@
 V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily jednotlivých častí algoritmu.
 
 Budeme sa venovať základným triedam, riešeniam elementárnych vecí, detailom spacovania obrazu, rozpoznávaniu ruky a gesta. Podrobne si popíšeme implementáciu neurónových sietí.
+
+Spomenieme aj niektoré problémy a ich riešenia a možnosti paralelizácie.
+
 \bigskip
 
 \section{Neurónové siete}
 
+\todo
 
 \begin{figure}[htp]
     \centering
@@ -36,18 +40,29 @@ Trieda \textit{HCImage}, je abstraktná trieda ktorá implementuje základné ve
 Na vystrihnutie slúži metóda {\tt copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
 
 \subsubsection{Škálovanie}
-Metóda {\tt scale(unsigned w, unsigned h)} využíva bilineárnu interpoláciu. Vypočíta súradnice nového bodu a pomocou susedných bodov z~pôvodného obrázka vypočíta farbu.
+Metóda {\tt scale(unsigned w, unsigned h)} preškáluje obrázok na novú veľkosť - $w\times h$ pixlov.
+
+Využíva bilineárnu interpoláciu -- vypočíta súradnice nového bodu a pomocou susedných bodov z~pôvodného obrázka vypočíta farbu.
 
 Bilineárna interpolácia má niekoľko výhod. Je stále dosť rýchla, pričom eliminuje kostrbatosť, ktorá môže mať výrazný vplyv pri použití Fourierovej transformácie.
 
 \subsubsection{Maskovanie}
-Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Metóda {\tt mask(HCImage *mask, bool invert = false)} využíva bitové operátory na urýchlenie výpočtu. Každý pixel skombinuje s~pixlom masky. 
 
-\subsubsection{Floodfill}
-Floodfill si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Floodfill používame na získanie masky v~metóde {\tt getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
+Metóda {\tt mask(HCImage *mask, bool invert = false)} aplikuje masku na obrázok. Hodnotu každej farby zníži podľa hodnoty masky v danom bode.
+
+Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Využívame bitové operátory na urýchlenie výpočtu. %Každý pixel skombinuje s~pixlom masky. 
+
+\subsubsection{Floodfill selekcia}
+Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde {\tt getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
+
+Metóda vráti obrázok, ktorý sa dá použiť ako maska, ktorá odstráni\footnote{začierni} pixle, ktoré neboli vybraté pomocou techniky \textit{floodfill}.
+
+Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
 
 \section{Získanie obrazu z~webkamery}
-Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v našej aplikácii. Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V prípade čiernobieleho obrázka iba zoberieme zložku Y.
+Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v našej aplikácii. Program je šírený pod GNU GPL licenciou.
+
+Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
 \section{Spracovanie obrazu}
 \subsection{Trieda ImageProcessor}
@@ -58,9 +73,9 @@ Spúštanie vláken je realizované pomocou funkcie {\tt QtConcurrent::run(Funct
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
-Na začiatku je pôvodný obrázok celý čierny a v rozdieli toho bude veľa. To nám však nevadí. 
+Na začiatku je pôvodný obrázok celý čierny a v rozdieli toho bude veľa. To nám však nevadí. \todo
 
-\subsubsection{Krok 2: Rozpitie}
+\subsubsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
 
 Triviálny algoritmus rozpitia - pre každý pixel vyrobíme okolo neho čierny štvorček - je časovo náročný - má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
@@ -70,12 +85,14 @@ Algoritmus pre $X$-ový smer funguje nasledovne: Ideme postupne po riadkoch a pr
 Na začiatku je to 0. Pozeráme sa vždy o $\frac{k}{2}$ pixlov ďalej ako kreslíme.
 Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o $k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$ v praxi pre $k=11$ asi $5\times$ rýchlejší.  
 
-Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne.
+Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne, čo je ďalšou výhodou efektívnejšieho algoritmu.
 
 Pre $Y$-ový smer je to analogické. 
 
 \subsubsection{Krok 3: Segmentácia}
-Ako sme už spomenuli v kapitole \ref{subsubsect:segment}, v časti segmentácia, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky. Algoritmus postupne spustíme z každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
+Ako sme už spomenuli v kapitole \ref{subsubsect:segment}, v časti segmentácia, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
+
+Algoritmus postupne spustíme z každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
 
 Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možné vhodne rozdeliť.
 
@@ -83,10 +100,10 @@ Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možn
 
 Rozpoznanie ruky má nastarosti trieda \textit{HandRecognizer}. Beží naraz v niekoľkých vláknach - každé vlákno spracováva len jeden segment.
 Trieda \textit{HandRecognizer} vyberie z fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
-
+\todo
 
 \section{Rozpoznanie gesta}
-
+\todo
 
 \section{Simulácia stlačenia kláves}
 Knižnica \textit{Xtst} poskytuje funkciu {\tt XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
@@ -95,6 +112,7 @@ Knižnica \textit{Xtst} poskytuje funkciu {\tt XTestFakeKeyEvent}, ktorá nám u
 
 \subsubsection{Upravená verzia aplikácie}
 Upravená verzia aplikácie umožňuje jednoduché ukladanie dát na disk.
+\todo
 
 \subsubsection{CreateFFT}
 
@@ -104,6 +122,11 @@ Upravená verzia aplikácie umožňuje jednoduché ukladanie dát na disk.
 \textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
 
 Dáta máme v 2 oddelených adresároch v jednom sú dáta zodpovedajúce rukám, a v druhom ostatné. Programu potom dáme tieto adresáre a on si z nich vyrobí trénovaciu/testovaciu sadu.
+\todo
 
 \subsubsection{Skripty}
 Pre zjednodušenie práce sme si napísali rôzne skripty na jednoduché spúštanie trénovania, testovania a na rozdelovanie vstupov do príslušných adresárov.
+\todo
+
+\section{Problémy a ich riešenia}
+\todo

@@ -27,7 +27,7 @@ Našim cieľom je čo najlepšie zachytiť pohybujúcu sa ruku.
 Dohodneme sa, že najmenšia zmena (žiadna) bude znázornená bielou a najväčšia čiernou. 
 
 \subsubsection{Odfiltrovanie šumu}
-Odfiltrovanie šumu zabezpečí hranica. Všetky pixle svetlejšie ako určitá konštanta, budú vykreslené bielou. Ideálna hranica je taká, ktorá potlačí šum, ale zachová čo najviac z ostatných zmien - čiže by mala byť najmenšia možná. Pohybujeme sa v odtieňoch šedej, čiže hodnoty $0\dots 255$. Praktické testy ukázali, že vhodnou hodnotou pre hranicu je 7.
+Odfiltrovanie šumu zabezpečí hranica -- \textit{treshold}. Všetky pixle svetlejšie ako určitá konštanta, budú vykreslené bielou. Ideálna hranica je taká, ktorá potlačí šum, ale zachová čo najviac z ostatných zmien -- čiže by mala byť najmenšia možná. Pohybujeme sa v odtieňoch šedej, čiže hodnoty $0\dots 255$. Praktické testy ukázali, že vhodnou hodnotou pre hranicu je 7.
 
 \subsubsection{Rozpitie pixlov}
 
@@ -40,10 +40,14 @@ Hodnota 11 pre stranu štvorca sa ukázala ako najvhodnejšia.
 Príliš veľké hodnoty spájajú aj časti, ktoré nepatria do toho istého segmentu, príliš malé zase nespoja časti, ktoré sú ďalej od seba.
 
 \subsubsection{Segmentácia}\label{subsubsect:segment}
-Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi každými 2 susediacimi pixlami (v štyroch smeroch). Segmentácia je vlastne len nájdenie komponentov v tomto grafe. Na to môžeme použiť napríklad prehľadávanie do šírky. Samozrejme musíme ešte nájsť opísaný obdĺžnik - stačí nájsť najľavejší, najpravejší, najvrchnejší a najspodnejší bod segmentu.
+Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi každými 2 susediacimi pixlami (v štyroch smeroch). Segmentácia je vlastne len nájdenie komponentov v tomto grafe. Na to môžeme použiť napríklad prehľadávanie do šírky. 
+
+Potrebujeme ešte nájsť opísaný obdĺžnik. To spravíme tak, že nájdeme najľavejší, najpravejší, najvrchnejší a najspodnejší bod segmentu.
 
 \subsection{Spracovanie segmentov}
-Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa.
+Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa. 
+
+\todo
 
 %Neural Net
 \section{Návrh architektúry neurónovej siete}\label{chap:neuralnetarch}
@@ -58,28 +62,41 @@ Neurónová sieť má rozdeliť vstupy do 2 tried - tie, ktoré zodpovedajú ruk
 
 \subsection{Trénovanie}
 
-Na generovanie dát sme použili upravenú verziu našej aplikácie, ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk. Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierovych transformácií\footnote{viď kapitola \ref{sect:metodyzlepseniaklasifikacie} } robili až dodatočne ďalšou aplikáciou.
+Na generovanie dát sme použili upravenú verziu našej aplikácie, ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k výraznému spomaleniu. 
 
-Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural} . Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
+%TODO odkaz na kapitolu v implementácii???
+
+%Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierovych transformácií\footnote{viď kapitola \ref{sect:metodyzlepseniaklasifikacie} } robili až dodatočne ďalšou aplikáciou.
+
+{\color{red}
+Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
 Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v postupnosti. Rekurentné vstupy sme updatli len v prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v reálnej aplikácii.
 
 Na trénovanie sme použili dáta fourierovych transformácií (viď \ref{sect:ft}). Množina dát obsahovala cca 800 vzorov, ktoré boli pri trénovaní rekurentnej neurónovej siete rozdelené do približne 70 postupností.
+}
 
 \subsection{Testovanie a vyhodnocovanie neurónových sietí}
-Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto veličinu.
+Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto metriku.
 
+%TODO formatovanie vzorca?
 Kvadratická chyba sa počita takto: $\frac{1}{2}(t-o)^2$, kde $t$ je cieľová hodnota a $o$ je výstup siete. V tabuľkách budeme uvádzať priemernú kvadratickú chybu, ktorú budeme počitať ako súčet všetkých kvadratických chýb deleno počet testovacích vstupov. 
 
 Na testovanie sme mali množinu cca 650 vzorov (60 postupností), ktoré sme nepoužívali na trénovanie.
 
 \subsection{Viac vrstvová dopredná neurónová sieť}
 
-\textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
+{\color{red}
+\textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. Viac o tomto type siete nájdete v kapitole \ref{chap:ffnn}.
+}
+%V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
 
 Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
+
 % - 3vrstvovú sieť sa nám ani nepodarilo natrénovať 
-V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach a priemerná kvadratická chyba.
+{\color{red}
+V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
+}
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -99,7 +116,6 @@ V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích d
 \label{tab:neuroncountcmp}
 \end{table}
 
-
 \subsection{Viac vrstvová dopredná neurónová sieť - upravená verzia}
 
 \begin{figure}[h]
@@ -109,7 +125,6 @@ V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích d
   \caption{Upravená dopredná neurónová sieť}
   \label{fig:dffnn}
 \end{figure}
-
 
 V upravenej verzii sme upravili spodnú vrstvu siete - tú, ktorá dostáva vstup. Vstup je rozdelený na 16 častí a ku každej časti je pridelených niekoľko neurónov. Každý neurón spracúva len vstupy z jeho časti (obr. \ref{fig:dffnn}). 
 
@@ -133,13 +148,15 @@ Nevýhodou je to, že neuróny sú fixne pridelené na jednotlivé vstupy. V pô
 \label{tab:neuroncountcmp2}
 \end{table}
 
-Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.
+{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
 %TODO popisat aj pocty pouzitych neuronou 
 %TODO trenovacie data do tabuliek
 
+\todo
+
 \subsection{Rekurentná neurónová sieť}
 
-Architektúra našej rekurentnej neurónovej siete vychádza z upravenej doprednej neurónovej siete, s tým, že namiesto obyčajného neurónu používame v niektorej vrstve rekurentný neurón (obr. \ref{fig:recurentneuron}) viac v kapitole \ref{chap:rnn}.
+Architektúra našej rekurentnej neurónovej siete vychádza z upravenej doprednej neurónovej siete, s tým, že namiesto obyčajného neurónu používame v niektorej vrstve rekurentný neurón (obr. \ref{fig:recurentneuron}). Viac o tomto type siete nájdete v kapitole \ref{chap:rnn}.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -155,6 +172,7 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 \label{tab:neuroncountcmp2}
 \end{table}
 
+\todo
 %end NeuralNet
 
 \section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
@@ -162,12 +180,19 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 
 V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predkladať neurónovej sieti, aby nám povedala, či je to ruka, alebo nie.
 
-\subsection{Normalizácia dát}
+\subsection{Trénovacia a testovacia množina}
+\todo 
+
+\subsection{Normalizácia dát} %TODO Dat inde? asi nie
 Ideálne vstupy pre neurónovú sieť sú z intervalu $<0,1>$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
 
 $$f(x)=\frac{1}{1+x}$$
 
 Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. %TODO dôvod? 
+
+%TODO Popisat preco je to nutne a v com to pomaha
+
+\todo 
 
 \subsection{Pôvodný vs. rozdielový obrázok}
 Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
@@ -176,7 +201,9 @@ Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých
 
 Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívaťeľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
 
+{\color{red}
 Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka (tabuľka \ref{tab:neuraldatacmp}). Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky. Pri vyhodnocovaní tejto časti sme použili menšiu trénovaciu a testovaciu sadu, ktorá obsahovala cca 350 trénovacích a 300 testovacích vzorov. Sada neobsahovala zle vybraté ruky.
+}
 
 \subsection{Fourierova transformácia} \label{sect:ft}
 Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
@@ -187,6 +214,7 @@ Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transfo
 
 %TODO
 %Úspešnosť na testovacej množine bola mierne nižšia.
+\todo
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
