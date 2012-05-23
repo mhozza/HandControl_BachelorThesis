@@ -184,7 +184,7 @@ V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predk
 \todo 
 
 \subsection{Normalizácia dát} %TODO Dat inde? asi nie
-Ideálne vstupy pre neurónovú sieť sú z intervalu $<0,1>$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
+Ideálne vstupy pre neurónovú sieť sú z intervalu $\langle 0,1\rangle$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
 
 $$f(x)=\frac{1}{1+x}$$
 

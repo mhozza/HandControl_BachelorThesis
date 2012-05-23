@@ -70,7 +70,7 @@ Trieda \textit{ContinuousPerceptron} je implementácia spojitého perceptrónu. 
 Definuje aktivačnú funkciu
 $$f(x)=\frac{1}{1+e^{-x}} $$
 a jej deriváciu
-$$f(x)=\frac{e^x}{(e^x+1)^2} $$
+$$f'(x)=\frac{e^x}{(e^x+1)^2} $$
 
 \subsection{RecurrentPerceptron}
 Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o rekurentný vstup a metódy na manipulovanie s ním -- \method{void update()} a \method{void reset()} na update a reset rekurentného vstupu.
@@ -90,7 +90,7 @@ Táto trieda poskytuje základnú implementáciu -- predkladá celý vstup každ
 \\Delta trénovanie pre \textit{backpropagation} algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} -- delty pre jednotlivé neuróny - podobne ako v kapitole \ref{sect:perceptron}
 %\\ \underline{Výstup:} \textit{void}
-\item \method{ float classify(vector<float> input)}
+\item \method{ vector<float> classify(vector<float> input)}
 \\ Klasifikačný algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete
 \\ \underline{Výstup:} pole čísel z intervalu $(0,1)$ - výstup siete.
@@ -109,6 +109,32 @@ Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer
 
 Spojením dvoch typov vrstiev získavame máme nový typ vrstvy, ktorá obsahuje rekurentné neuróny, pričom každý z nich má k dispozícii len časť vstupu.
 
+\subsection{NeuralNetwork}
+Trieda \textit{NeuralNetwork} zoskupuje vrstvy do viacvrstvovej siete. Implementuje viacvrstvovú sieť s vrstvami typu \textit{NeuralLayer} a zároveň slúži ako základná trieda pre neurónové siete, od ktorej potom dedia ostatné siete.
+
+Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načítanie váh do/zo súboru.
+
+\subsubsection{Dôležité metódy}
+\begin{itemize}
+\item \method{float train(vector<float> input, vector<int> target)}
+\\\textit{Backpropagation} algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{target} - požadované výstupy 
+\\ \underline{Výstup:} chyba na danom vstupe.
+\item \method{ vector<float> classify(vector<float> input)}
+\\ Klasifikačný algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete
+\\ \underline{Výstup:} pole čísel z intervalu $(0,1)$ - výstup siete.
+\end{itemize}
+
+\subsection{DistributedNeuralNetwork}
+\todo
+
+\subsection{RecurrentNetwork}
+%TODO ak sa zmeni implementacia na viac rekurentnych vrstiev, tak treba aj toto upravit
+Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. %Ako spodnú vrstvu používa 
+\todo
+
+\subsection{DistributedRecurrentNetwork}
 \todo
 
 \section{Triedy pre obrázky}
