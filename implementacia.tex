@@ -10,16 +10,106 @@ Spomenieme aj niektoré problémy a ich riešenia a možnosti paralelizácie.
 
 \section{Neurónové siete}
 
-\todo
+Naša implementácia neurónových sietí kopíruje vrstvový model. Základnou jednotkou je spojitý perceptrón, skupinu perceptrónov zastrešuje vrstva a skupinu vrstiev neurónová sieť. 
+
+Ku každej z týchto úrovní máme všeobecnú triedu a rôzne implementácie. Na obrázku \ref{fig:nnclsdiag} je class diagram nášho riešenia.
 
 \begin{figure}[htp]
     \centering
-%    \includegraphics[scale=1]{img/00/extern-drive-encryption.1.mps}
     \includegraphics[width=\textwidth]{images/nn_class_diagram}
-%    \includegraphics[scale=1]{images/BaseAlgorithm}
-    \caption{Class diagram}
+    \caption{Neurónové siete - Class diagram}
     \label{fig:nnclsdiag}
 \end{figure}
+
+\subsection{Perceptron} \label{sect:perceptron}
+\textit{Perceptron} je abstraktná trieda, ktorá zovšeobecňuje rôzne typy perceptrónov, ktoré sa líšia rôznymi aktivačnými funkciami.
+
+Obsahuje trénovací algoritmus pre perceptróny
+%(metóda \method{void train(vector<float> input,int target)} )
+, ale aj podporu algoritmu \textit{backpropagation} 
+%(metóda \method{ void trainDelta(vector<float> input, float delta)} )
+a klasifikačný algoritmus 
+%(metóda \method{ float classify(vector<float> input)} )
+. Okrem toho obsahuje užitočné funkcie na randomizáciu váh, ukladanie a načítanie váh.
+
+Perceptron pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}
+%TODO referenciu?
+, takže ho nie je nutné pridávať k vstupu.
+
+Možnosť vytvorenia rôznych typov perceptrónov zabezpečujú abstraktné metódy 
+\begin{itemize}
+\item \method{float activationFunction(const vector<float>* input)},
+\item \method{float derivativeFunction(float x)},
+\end{itemize}
+ktoré treba definovať.
+
+\subsubsection{Dôležité metódy}
+\begin{itemize}
+\item \method{void train(vector<float> input,int target)}
+\\Jednoduché trénovanie perceptrónov.
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{target} - požadovaný výstup 
+%\\ \underline{Výstup:} \textit{void}
+\item \method{ void trainDelta(vector<float> input, float delta)}
+\\Delta trénovanie pre \textit{backpropagation} algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} $=\delta$ z učiaceho pravidla: $\Delta w_i = \alpha\delta x_i$\footnote{používame mierne inú notáciu ako je v \cite{haykin1999neural}} \cite[s. 74]{haykin1999neural}
+%\\ \underline{Výstup:} \textit{void}
+\item \method{ float classify(vector<float> input)}
+\\Klasifikačný algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete
+\\ \underline{Výstup:} reálne číslo z intervalu $(0,1)$ - výstup siete.
+\item \method{void prepare(vector<float>* input);}
+\\Predpríprava vstupu pre spracovanie v perceptróne - pridáva \textit{bias}.
+
+Túto metódu treba volať tam, kde metóda dostáva užívateľský vstup - bez \textit{biasu}.
+\\ \underline{Vstup:} \textit{*input} - pointer vstup siete
+\\ \underline{Výstup:} metóda upraví priamo vektor, ktorý jej bol daný ako vstup.
+\end{itemize}
+
+\subsection{ContinuousPerceptron}
+Trieda \textit{ContinuousPerceptron} je implementácia spojitého perceptrónu. Dedí od triedy \textit{Perceptron} 
+Definuje aktivačnú funkciu
+$$f(x)=\frac{1}{1+e^{-x}} $$
+a jej deriváciu
+$$f(x)=\frac{e^x}{(e^x+1)^2} $$
+
+\subsection{RecurrentPerceptron}
+Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o rekurentný vstup a metódy na manipulovanie s ním -- \method{void update()} a \method{void reset()} na update a reset rekurentného vstupu.
+
+\subsection{NeuralLayer}
+\textit{NeuralLayer} je trieda, ktorá zoskupuje spojité perceptróny do vrstvy. Umožňuje trénovanie na viacrozmerné výstupy a podporuje \textit{backpropagation} algoritmus. 
+
+Táto trieda poskytuje základnú implementáciu -- predkladá celý vstup každému neurónu. Je zároveň základnou triedou pre vrstvy neurónov, od ktorej potom dedia iné typy vrstiev. Zmena vlastností triedy sa deje v konštruktore, kde je možné určiť typy jednotlivých neurónov a ich parametre.
+
+\subsubsection{Dôležité metódy}
+\begin{itemize}
+\item \method{float train(vector<float> input, vector<int> target)}
+\\Jednoduché trénovanie jednotlivých perceptrónov.
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{target} - požadované výstupy 
+\\ \underline{Výstup:} chyba na danom vstupe.
+\item \method{void trainDelta(vector<float> input,vector<float> delta)}
+\\Delta trénovanie pre \textit{backpropagation} algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} -- delty pre jednotlivé neuróny - podobne ako v kapitole \ref{sect:perceptron}
+%\\ \underline{Výstup:} \textit{void}
+\item \method{ float classify(vector<float> input)}
+\\ Klasifikačný algoritmus.
+\\ \underline{Vstup:} \textit{input} - vstup siete
+\\ \underline{Výstup:} pole čísel z intervalu $(0,1)$ - výstup siete.
+\end{itemize}
+
+\subsection{DistributedNeuralLayer}
+Trieda \textit{DistributedNeuralLayer} dedí od triedy \textit{NeuralLayer}. Poskytuje podobnú funkcionalitu ako \textit{NeuralLayer}, ale vstup je rozdelený na $n\times m$ častí a každý neurón má k dispozícii len jednu časť. 
+
+Okrem konštruktora bolo v tomto prípade nutné upraviť aj metódy \method{float train(vector<float>,vector<int>)} a \method{vector<float> classify(vector<float>)}, tak, aby trénovanie a klasifikácia prebiehala na príslušnej časti vstupu.
+
+\subsection{RecurrentLayer}
+Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožnujú update a reset rekurentného vstupu neurónov.
+
+\subsection{DistributedRecurrentLayer}
+Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer} a \textit{DistributedRecurrentLayer}. Tu sa ukazuje sila nášho objektovo orientovaného modelu ako aj sila viacnásobného dedenia v C++. Táto trieda obsahuje len konštruktor, ktorý volá konštruktory rodičovských tried. Prakticky bez námahy vieme takto vytvoriť nový typ siete spojením dvoch existujúcich.
+
+Spojením dvoch typov vrstiev získavame máme nový typ vrstvy, ktorá obsahuje rekurentné neuróny, pričom každý z nich má k dispozícii len časť vstupu.
+
+\todo
 
 \section{Triedy pre obrázky}
 
@@ -37,10 +127,10 @@ Trieda \textit{HCImage}, je abstraktná trieda ktorá implementuje základné ve
 
 %V ďalšom texte sa budeme venovať jednotliv
 \subsubsection{Vystrihnutie}
-Na vystrihnutie slúži metóda {\tt copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
+Na vystrihnutie slúži metóda \method{copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
 
 \subsubsection{Škálovanie}
-Metóda {\tt scale(unsigned w, unsigned h)} preškáluje obrázok na novú veľkosť - $w\times h$ pixlov.
+Metóda \method{scale(unsigned w, unsigned h)} preškáluje obrázok na novú veľkosť - $w\times h$ pixlov.
 
 Využíva bilineárnu interpoláciu -- vypočíta súradnice nového bodu a pomocou susedných bodov z~pôvodného obrázka vypočíta farbu.
 
@@ -48,12 +138,12 @@ Bilineárna interpolácia má niekoľko výhod. Je stále dosť rýchla, pričom
 
 \subsubsection{Maskovanie}
 
-Metóda {\tt mask(HCImage *mask, bool invert = false)} aplikuje masku na obrázok. Hodnotu každej farby zníži podľa hodnoty masky v danom bode.
+Metóda \method{mask(HCImage *mask, bool invert = false)} aplikuje masku na obrázok. Hodnotu každej farby zníži podľa hodnoty masky v danom bode.
 
 Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Využívame bitové operátory na urýchlenie výpočtu. %Každý pixel skombinuje s~pixlom masky. 
 
 \subsubsection{Floodfill selekcia}
-Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde {\tt getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
+Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde \method{getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
 
 Metóda vráti obrázok, ktorý sa dá použiť ako maska, ktorá odstráni\footnote{začierni} pixle, ktoré neboli vybraté pomocou techniky \textit{floodfill}.
 
@@ -66,9 +156,9 @@ Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázko
 
 \section{Spracovanie obrazu}
 \subsection{Trieda ImageProcessor}
-Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda {\tt processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
+Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
-Spúštanie vláken je realizované pomocou funkcie {\tt QtConcurrent::run(Function function, ...)} z knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s danými parametrami v novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v rôznych vláknach s rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
+Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s danými parametrami v novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v rôznych vláknach s rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
 
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
@@ -106,7 +196,7 @@ Trieda \textit{HandRecognizer} vyberie z fronty obdĺžnik čakajúci na spracov
 \todo
 
 \section{Simulácia stlačenia kláves}
-Knižnica \textit{Xtst} poskytuje funkciu {\tt XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
+Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
 
 \section{Pomocné programy}
 
