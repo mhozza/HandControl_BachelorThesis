@@ -1,7 +1,7 @@
 
 \chapter{Neurónové siete}\label{chap:neuralnet}
 
-Keďže \textit{umelé neurónové siete} sú významnou časťou tejto práce, venujeme im samostatnú kapitolu. Popíšeme čo sú neurónové siete, ako fungujú a základné typy neurónových sietí, ktoré používame v aplikácií.
+Keďže \textit{umelé neurónové siete} sú významnou časťou tejto práce, venujeme im samostatnú kapitolu. Popíšeme čo sú neurónové siete, ako fungujú a základné typy neurónových sietí, ktoré používame v~aplikácií.
 \bigskip
 
 \section{Jednoduchý spojitý perceprtón}
@@ -34,7 +34,7 @@ Keď si neurón predstavíme ako orientovaný graf (Obr. \ref{fig:neuron}), za v
 \item Aktivačné -- neurón $\rightarrow$ výstup -- nelineárna input-output väzba, kde $y$ dostaneme dosadením $\sum x_i'$ do aktivačnej funkcie.
 \end{enumerate}
 
-K vstupom treba pridať ešte jeden vstup -- \textit{bias} -- ktorý má vždy hodnotu 1. Jeho význam je pri vstupe so samými nulami, pretože vtedy hodnoty na synapsách ostanú nezmenené a perceptrón by sa tento vzor nevedel naučiť.
+K~vstupom treba pridať ešte jeden vstup -- \textit{bias} -- ktorý má vždy hodnotu 1. Jeho význam je pri vstupe so samými nulami, pretože vtedy hodnoty na synapsách ostanú nezmenené a perceptrón by sa tento vzor nevedel naučiť.
 
 Nech $n$ je počet vstupov a  $f$ je aktivačná funkcia. Výsledný signál $y$ dostaneme takto:
 
@@ -45,13 +45,13 @@ Aktivačnou funkciou spojitého je sigmoida:
 $$f(x) = \frac{1}{1+e^{-x}}$$\medskip
 %Sigmoida bola vybratá preto, lebo spĺňa vlastnosti, ktoré má mať aktivačná funkcia.
 
-Z matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
+Z~matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
 
 \section{Jednovrstvová neurónová sieť}
 
 Niekoľko perceptrónov vieme spojiť do jednej vrstvy. Získame tým väčší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach, kde môžme vrstvy pospájať.
 
-Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle, takže z praktického hľadiska je to skupina neurónov pracujúcich nad tým istým vstupom.
+Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle, takže z~praktického hľadiska je to skupina neurónov pracujúcich nad tým istým vstupom.
 
 Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
 
@@ -67,7 +67,7 @@ Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vst
 
 Viacvrstvová neurónová sieť vznikne spojením niekoľkých vrstiev. Nižšia vrstva tvorí vstup pre vyššiu (obr. \ref{fig:ffnn}). Pôvodný vstup je vstupom pre najnižšiu vrstvu.
 
-Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z nich je napríklad funkcia \textit{xor} \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
+Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z~nich je napríklad funkcia \textit{xor} \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
 
 Viacvrstvové neurónové siete sa trénujeme algoritmom backpropagation\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
 

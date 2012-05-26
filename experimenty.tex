@@ -1,32 +1,29 @@
 \chapter{Experimenty}\label{chap:experiments}
 
-V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, porovnáme ich úspešnosť a ukážeme, ktorá z nich je najvhodnejšia. Ďalej sa budeme venovať aj predspracovaniu segmentov, ktoré priamo ovplyvňuje vlastnosti trénovania a úspešnosť sietí.
+V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, porovnáme ich úspešnosť a ukážeme, ktorá z~nich je najvhodnejšia. Ďalej sa budeme venovať aj predspracovaniu segmentov, ktoré priamo ovplyvňuje vlastnosti trénovania a úspešnosť sietí.
 \bigskip
 
 \section{Trénovanie}
 
-Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s informáciou či sa jedná o ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
+Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s~informáciou či sa jedná o~ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
-Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v postupnosti. Rekurentné vstupy sme updatli len v prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v reálnej aplikácii.
+Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme updatli len v~prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v~reálnej aplikácii.
 
 \section{Testovanie a vyhodnocovanie neurónových sietí}
 Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto metriku.
 
-%TODO formatovanie vzorca?
-Kvadratická chyba sa počíta takto: $\frac{1}{2}(t-o)^2$, kde $t$ je cieľová hodnota a $o$ je výstup siete. V tabuľkách budeme uvádzať priemernú kvadratickú chybu, ktorú budeme počítať ako súčet všetkých kvadratických chýb deleno počet testovacích vstupov. 
+Kvadratická chyba sa počíta takto: $$\frac{1}{2}(t-o)^2$$
+$t$ je cieľová hodnota a $o$ je výstup siete. V~tabuľkách budeme uvádzať priemernú kvadratickú chybu, ktorú budeme počítať ako súčet všetkých kvadratických chýb deleno počet testovacích vstupov. 
 
 \section{Trénovacie a testovacie dáta}
 
-Na generovanie dát sme použili upravenú verziu našej aplikácie, ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k výraznému spomaleniu. 
-
-%Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierovych transformácií\footnote{viď kapitola \ref{sect:metodyzlepseniaklasifikacie} } robili až dodatočne ďalšou aplikáciou.
-%TODO odkaz na kapitolu v implementácii???
+Na generovanie dát sme použili upravenú verziu našej aplikácie (kapitola \ref{chap:neuralnetapp}), ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k~výraznému spomaleniu. 
 
 Trénovacie dáta sme rozdelili na dve sady. Každá sada bola rozdelená na trénovaciu a testovaciu množinu.
 
-Prvou sadou sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožnovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky.
+Prvou sadou sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožňovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky. Na jednu postupnosť pripadá v~priemere cca 11 obrázkov.
 
-Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z tejto sady boli vyňaté obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v ideálnych prípadoch.
+Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z~tejto sady boli vyňaté obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v~ideálnych prípadoch.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -50,16 +47,12 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 
 \section{Porovnanie architektúr neurónových sietí}
 
-{\color{red}
-\textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. Viac o tomto type siete nájdete v kapitole \ref{chap:ffnn}.
-}
-%V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
 
 Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
 
 % - 3vrstvovú sieť sa nám ani nepodarilo natrénovať 
 {\color{red}
-V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
+V~tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
 }
 
 \begin{table}[h]
@@ -112,7 +105,7 @@ V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích d
 \label{tab:neuroncountcmp2}
 \end{table}
 
-{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
+{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s~tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v~úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
 %TODO popisat aj pocty pouzitych neuronou 
 %TODO trenovacie data do tabuliek
 

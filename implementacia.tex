@@ -12,7 +12,7 @@ Spomenieme aj niektoré problémy a ich riešenia a možnosti paralelizácie.
 
 Naša implementácia neurónových sietí kopíruje vrstvový model. Základnou jednotkou je spojitý perceptrón, skupinu perceptrónov zastrešuje vrstva a skupinu vrstiev neurónová sieť. 
 
-Ku každej z týchto úrovní máme všeobecnú triedu a rôzne implementácie. Na obrázku \ref{fig:nnclsdiag} je class diagram nášho riešenia.
+Ku každej z~týchto úrovní máme všeobecnú triedu a rôzne implementácie. Na obrázku \ref{fig:nnclsdiag} je class diagram nášho riešenia.
 
 \begin{figure}[htp]
     \centering
@@ -34,7 +34,7 @@ a klasifikačný algoritmus
 
 Perceptron pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}
 %TODO referenciu?
-, takže ho nie je nutné pridávať k vstupu.
+, takže ho nie je nutné pridávať k~vstupu.
 
 Možnosť vytvorenia rôznych typov perceptrónov zabezpečujú abstraktné metódy 
 \begin{itemize}
@@ -51,14 +51,14 @@ ktoré treba definovať.
 %\\ \underline{Výstup:} \textit{void}
 \item \method{ void trainDelta(vector<float> input, float delta)}
 \\Delta trénovanie pre \textit{backpropagation} algoritmus.
-\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} $=\delta$ z učiaceho pravidla: $\Delta w_i = \alpha\delta x_i$\footnote{používame mierne inú notáciu ako je v \cite{haykin1999neural}} \cite[s. 74]{haykin1999neural}
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} $=\delta$ z~učiaceho pravidla: $\Delta w_i = \alpha\delta x_i$\footnote{používame mierne inú notáciu ako je v~\cite{haykin1999neural}} \cite[s. 74]{haykin1999neural}
 %\\ \underline{Výstup:} \textit{void}
 \item \method{ float classify(vector<float> input)}
 \\Klasifikačný algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete
-\\ \underline{Výstup:} reálne číslo z intervalu $(0,1)$ - výstup siete.
+\\ \underline{Výstup:} reálne číslo z~intervalu $(0,1)$ - výstup siete.
 \item \method{void prepare(vector<float>* input);}
-\\Predpríprava vstupu pre spracovanie v perceptróne - pridáva \textit{bias}.
+\\Predpríprava vstupu pre spracovanie v~perceptróne - pridáva \textit{bias}.
 
 Túto metódu treba volať tam, kde metóda dostáva užívateľský vstup - bez \textit{biasu}.
 \\ \underline{Vstup:} \textit{*input} - pointer vstup siete
@@ -73,12 +73,12 @@ a jej deriváciu
 $$f'(x)=\frac{e^x}{(e^x+1)^2} $$
 
 \subsection{RecurrentPerceptron}
-Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o rekurentný vstup a metódy na manipulovanie s ním -- \method{void update()} a \method{void reset()} na update a reset rekurentného vstupu.
+Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o~rekurentný vstup a metódy na manipulovanie s~ním -- \method{void update()} a \method{void reset()} na update a reset rekurentného vstupu.
 
 \subsection{NeuralLayer}
 \textit{NeuralLayer} je trieda, ktorá zoskupuje spojité perceptróny do vrstvy. Umožňuje trénovanie na viacrozmerné výstupy a podporuje \textit{backpropagation} algoritmus. 
 
-Táto trieda poskytuje základnú implementáciu -- predkladá celý vstup každému neurónu. Je zároveň základnou triedou pre vrstvy neurónov, od ktorej potom dedia iné typy vrstiev. Zmena vlastností triedy sa deje v konštruktore, kde je možné určiť typy jednotlivých neurónov a ich parametre.
+Táto trieda poskytuje základnú implementáciu -- predkladá celý vstup každému neurónu. Je zároveň základnou triedou pre vrstvy neurónov, od ktorej potom dedia iné typy vrstiev. Zmena vlastností triedy sa deje v~konštruktore, kde je možné určiť typy jednotlivých neurónov a ich parametre.
 
 \subsubsection{Dôležité metódy}
 \begin{itemize}
@@ -88,29 +88,29 @@ Táto trieda poskytuje základnú implementáciu -- predkladá celý vstup každ
 \\ \underline{Výstup:} chyba na danom vstupe.
 \item \method{void trainDelta(vector<float> input,vector<float> delta)}
 \\Delta trénovanie pre \textit{backpropagation} algoritmus.
-\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} -- delty pre jednotlivé neuróny - podobne ako v kapitole \ref{sect:perceptron}
+\\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} -- delty pre jednotlivé neuróny - podobne ako v~kapitole \ref{sect:perceptron}
 %\\ \underline{Výstup:} \textit{void}
 \item \method{ vector<float> classify(vector<float> input)}
 \\ Klasifikačný algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete
-\\ \underline{Výstup:} pole čísel z intervalu $(0,1)$ - výstup siete.
+\\ \underline{Výstup:} pole čísel z~intervalu $(0,1)$ - výstup siete.
 \end{itemize}
 
 \subsection{DistributedNeuralLayer}
-Trieda \textit{DistributedNeuralLayer} dedí od triedy \textit{NeuralLayer}. Poskytuje podobnú funkcionalitu ako \textit{NeuralLayer}, ale vstup je rozdelený na $n\times m$ častí a každý neurón má k dispozícii len jednu časť. 
+Trieda \textit{DistributedNeuralLayer} dedí od triedy \textit{NeuralLayer}. Poskytuje podobnú funkcionalitu ako \textit{NeuralLayer}, ale vstup je rozdelený na $n\times m$ častí a každý neurón má k~dispozícii len jednu časť. 
 
-Okrem konštruktora bolo v tomto prípade nutné upraviť aj metódy \method{float train(vector<float>,vector<int>)} a \method{vector<float> classify(vector<float>)}, tak, aby trénovanie a klasifikácia prebiehala na príslušnej časti vstupu.
+Okrem konštruktora bolo v~tomto prípade nutné upraviť aj metódy \method{float train(vector<float>,vector<int>)} a \method{vector<float> classify(vector<float>)}, tak, aby trénovanie a klasifikácia prebiehala na príslušnej časti vstupu.
 
 \subsection{RecurrentLayer}
 Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožnujú update a reset rekurentného vstupu neurónov.
 
 \subsection{DistributedRecurrentLayer}
-Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer} a \textit{DistributedRecurrentLayer}. Tu sa ukazuje sila nášho objektovo orientovaného modelu ako aj sila viacnásobného dedenia v C++. Táto trieda obsahuje len konštruktor, ktorý volá konštruktory rodičovských tried. Prakticky bez námahy vieme takto vytvoriť nový typ siete spojením dvoch existujúcich.
+Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer} a \textit{DistributedRecurrentLayer}. Tu sa ukazuje sila nášho objektovo orientovaného modelu ako aj sila viacnásobného dedenia v~C++. Táto trieda obsahuje len konštruktor, ktorý volá konštruktory rodičovských tried. Prakticky bez námahy vieme takto vytvoriť nový typ siete spojením dvoch existujúcich.
 
-Spojením dvoch typov vrstiev získavame máme nový typ vrstvy, ktorá obsahuje rekurentné neuróny, pričom každý z nich má k dispozícii len časť vstupu.
+Spojením dvoch typov vrstiev získavame máme nový typ vrstvy, ktorá obsahuje rekurentné neuróny, pričom každý z~nich má k~dispozícii len časť vstupu.
 
 \subsection{NeuralNetwork}
-Trieda \textit{NeuralNetwork} zoskupuje vrstvy do viacvrstvovej siete. Implementuje viacvrstvovú sieť s vrstvami typu \textit{NeuralLayer} a zároveň slúži ako základná trieda pre neurónové siete, od ktorej potom dedia ostatné siete.
+Trieda \textit{NeuralNetwork} zoskupuje vrstvy do viacvrstvovej siete. Implementuje viacvrstvovú sieť s~vrstvami typu \textit{NeuralLayer} a zároveň slúži ako základná trieda pre neurónové siete, od ktorej potom dedia ostatné siete.
 
 Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načítanie váh do/zo súboru.
 
@@ -123,7 +123,7 @@ Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načít
 \item \method{ vector<float> classify(vector<float> input)}
 \\ Klasifikačný algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete
-\\ \underline{Výstup:} pole čísel z intervalu $(0,1)$ - výstup siete.
+\\ \underline{Výstup:} pole čísel z~intervalu $(0,1)$ - výstup siete.
 \end{itemize}
 
 \subsection{DistributedNeuralNetwork}
@@ -164,7 +164,7 @@ Bilineárna interpolácia má niekoľko výhod. Je stále dosť rýchla, pričom
 
 \subsubsection{Maskovanie}
 
-Metóda \method{mask(HCImage *mask, bool invert = false)} aplikuje masku na obrázok. Hodnotu každej farby zníži podľa hodnoty masky v danom bode.
+Metóda \method{mask(HCImage *mask, bool invert = false)} aplikuje masku na obrázok. Hodnotu každej farby zníži podľa hodnoty masky v~danom bode.
 
 Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Využívame bitové operátory na urýchlenie výpočtu. %Každý pixel skombinuje s~pixlom masky. 
 
@@ -176,46 +176,46 @@ Metóda vráti obrázok, ktorý sa dá použiť ako maska, ktorá odstráni\foot
 Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
 
 \section{Získanie obrazu z~webkamery}
-Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v našej aplikácii. Program je šírený pod GNU GPL licenciou.
+Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v~našej aplikácii. Program je šírený pod GNU GPL licenciou.
 
-Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V prípade čiernobieleho obrázka iba zoberieme zložku Y.
+Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z~tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V~prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
 \section{Spracovanie obrazu}
 \subsection{Trieda ImageProcessor}
-Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
+Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
-Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s danými parametrami v novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v rôznych vláknach s rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
+Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
 
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
-Na začiatku je pôvodný obrázok celý čierny a v rozdieli toho bude veľa. To nám však nevadí. \todo
+Na začiatku je pôvodný obrázok celý čierny a v~rozdieli toho bude veľa. To nám však nevadí. \todo
 
 \subsubsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
 
 Triviálny algoritmus rozpitia - pre každý pixel vyrobíme okolo neho čierny štvorček - je časovo náročný - má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
-Efektívny algoritmus rozpitia treba robiť v 2 krokoch. Najskôr sa rozpije v $X$-ovom smere a potom v $Y$-ovom.
+Efektívny algoritmus rozpitia treba robiť v~2 krokoch. Najskôr sa rozpije v~$X$-ovom smere a potom v~$Y$-ovom.
 
 Algoritmus pre $X$-ový smer funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
-Na začiatku je to 0. Pozeráme sa vždy o $\frac{k}{2}$ pixlov ďalej ako kreslíme.
-Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o $k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$ v praxi pre $k=11$ asi $5\times$ rýchlejší.  
+Na začiatku je to 0. Pozeráme sa vždy o~$\frac{k}{2}$ pixlov ďalej ako kreslíme.
+Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ asi $5\times$ rýchlejší.  
 
 Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne, čo je ďalšou výhodou efektívnejšieho algoritmu.
 
 Pre $Y$-ový smer je to analogické. 
 
 \subsubsection{Krok 3: Segmentácia}
-Ako sme už spomenuli v kapitole \ref{subsubsect:segment}, v časti segmentácia, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
+Ako sme už spomenuli v~kapitole \ref{subsubsect:segment}, v~časti segmentácia, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
 
-Algoritmus postupne spustíme z každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
+Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
 
 Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možné vhodne rozdeliť.
 
 \section{Rozpoznanie ruky}
 
-Rozpoznanie ruky má nastarosti trieda \textit{HandRecognizer}. Beží naraz v niekoľkých vláknach - každé vlákno spracováva len jeden segment.
-Trieda \textit{HandRecognizer} vyberie z fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
+Rozpoznanie ruky má nastarosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach - každé vlákno spracováva len jeden segment.
+Trieda \textit{HandRecognizer} vyberie z~fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
 \todo
 
 \section{Rozpoznanie gesta}
@@ -232,12 +232,16 @@ Upravená verzia aplikácie umožňuje jednoduché ukladanie dát na disk.
 
 \subsubsection{CreateFFT}
 
-\textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z obrázka. Ako parameter berie cestu k obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
+\textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
 
-\subsubsection{NeuralNet}
+\subsubsection{NeuralNet}\label{chap:neuralnetapp}
 \textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
 
-Dáta máme v 2 oddelených adresároch v jednom sú dáta zodpovedajúce rukám, a v druhom ostatné. Programu potom dáme tieto adresáre a on si z nich vyrobí trénovaciu/testovaciu sadu.
+Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
+
+Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
+
+
 \todo
 
 \subsubsection{Skripty}
