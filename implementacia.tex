@@ -206,7 +206,7 @@ Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na ni
 Pre $Y$-ový smer je to analogické. 
 
 \subsubsection{Krok 3: Segmentácia}
-Ako sme už spomenuli v~kapitole \ref{subsubsect:segment}, v~časti segmentácia, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
+Ako sme už spomenuli v~kapitole \ref{chap:segment}, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
 
 Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
 
@@ -227,20 +227,22 @@ Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá ná
 \section{Pomocné programy}
 
 \subsubsection{Upravená verzia aplikácie}
-Upravená verzia aplikácie umožňuje jednoduché ukladanie dát na disk.
-\todo
+\label{chap:saveimageapp}
+Upravená verzia aplikácie je kópiou aplikácie, ktorá umožňuje jednoduché ukladanie dát na disk.
+
+Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
 
 \subsubsection{CreateFFT}
 
 \textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
 
-\subsubsection{NeuralNet}\label{chap:neuralnetapp}
+\todo
+
+\subsubsection{NeuralNet}
+%\label{chap:neuralnetapp}
 \textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
 
-Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
-
 Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
-
 
 \todo
 

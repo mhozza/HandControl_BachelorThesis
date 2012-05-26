@@ -5,7 +5,8 @@ V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, 
 
 \section{Trénovanie}
 
-Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{Backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s~informáciou či sa jedná o~ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
+%TODO treba citaciu?
+Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s~informáciou či sa jedná o~ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
 Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme updatli len v~prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v~reálnej aplikácii.
 
@@ -17,13 +18,13 @@ $t$ je cieľová hodnota a $o$ je výstup siete. V~tabuľkách budeme uvádzať 
 
 \section{Trénovacie a testovacie dáta}
 
-Na generovanie dát sme použili upravenú verziu našej aplikácie (kapitola \ref{chap:neuralnetapp}), ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k~výraznému spomaleniu. 
+Na generovanie dát sme použili upravenú verziu našej aplikácie (kapitola \ref{chap:saveimageapp}), ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k~výraznému spomaleniu. 
 
-Trénovacie dáta sme rozdelili na dve sady. Každá sada bola rozdelená na trénovaciu a testovaciu množinu.
+Trénovacie dáta sme rozdelili na dve sady. Každá sada bola rozdelená na dve disjunktné množiny -- trénovaciu a testovaciu. 
 
-Prvou sadou sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožňovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky. Na jednu postupnosť pripadá v~priemere cca 11 obrázkov.
+Prvou sadou sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožňovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky. Na jednu postupnosť pripadá v~priemere približne 11 obrázkov. Sada obsahuje rozdielové obrázky\footnote{kapitola \ref{chap:diffimg}} a k~nim zodpovedajúce fourierove transformácie.
 
-Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z~tejto sady boli vyňaté obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v~ideálnych prípadoch.
+Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z~tejto sady boli vyňaté obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v~ideálnych prípadoch. Sada obsahuje rozdielové obrázky, k~nim zodpovedajúce pôvodné obrázky a fourierove transformácie zodpovedajúce obom typom.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -41,19 +42,15 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \label{tab:neuroncountcmp}
 \end{table}
 
-%Na trénovanie sme použili dáta fourierovych transformácií (viď \ref{sect:ft}). Množina dát obsahovala cca 800 vzorov, ktoré boli pri trénovaní rekurentnej neurónovej siete rozdelené do približne 70 postupností.
-
-%Na testovanie sme mali množinu cca 650 vzorov (60 postupností), ktoré sme nepoužívali na trénovanie.
-
 \section{Porovnanie architektúr neurónových sietí}
 
 
-Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
+%Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
 
 % - 3vrstvovú sieť sa nám ani nepodarilo natrénovať 
-{\color{red}
-V~tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
-}
+%{\color{red}
+%V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
+%}
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -105,7 +102,7 @@ V~tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích d
 \label{tab:neuroncountcmp2}
 \end{table}
 
-{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s~tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v~úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
+%{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
 %TODO popisat aj pocty pouzitych neuronou 
 %TODO trenovacie data do tabuliek
 
@@ -129,7 +126,7 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 \label{tab:neuroncountcmp2}
 \end{table}
 
-\todo
+%\todo
 %end NeuralNet
 
 %\section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
@@ -149,7 +146,7 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 
 %TODO Popisat preco je to nutne a v com to pomaha
 
-%\todo 
+\todo 
 
 \section{Porovnanie rôznych typov dát}
 %Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
@@ -190,3 +187,5 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 \caption{Porovnanie úspešnosti NS pri rôznych dátach}
 \label{tab:neuraldatacmp}
 \end{table}
+
+\todo
