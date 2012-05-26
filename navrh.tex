@@ -54,55 +54,54 @@ V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predk
 
 Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v našom prípade $128\times 128$ - a normalizuje sa. 
 
-\subsubsection{Normalizácia dát} 
+\subsubsection{Normalizácia dát} \label{chap:normalisation}
 Ideálne vstupy pre neurónovú sieť sú z intervalu $\langle 0,1\rangle$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
 
 $$f(x)=\frac{1}{1+x}$$
 
-Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. %TODO dôvod? 
-
-%TODO Popisat preco je to nutne a v com to pomaha
-
-\todo 
+Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. Hodnoty vo fourierovej transformácii môžu byť veľmi veľké, preto chceme eliminovať vplyv príliš veľkých hodnôt. Navyše nám to umožňuje stlačiť hodnoty do intervalu $\langle 0,1\rangle$ aj bez toho, aby sme poznali maximálnu hodnotu.
 
 \subsubsection{Fourierova transformácia} \label{sect:ft}
-Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
+Fourierova transformácia zvykne často pomáhať, keď sa použije na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť. Navyše fourierove transformácie obrázkov rúk mali určité typické vlastnosti (obr. \ref{fig:fft}).
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=\textwidth]{images/fft_preview}
+    \caption{Fourierova transformácia a jej typické vlastnosti pre obrázok ruky}
+    \label{fig:fft}
+\end{figure}
 
 Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel ako absolútna hodnota z komplexného čísla a následne normalizovaná.
 
-Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine. 
-
-\todo
-
 \subsubsection{Použitie pôvodného namiesto rozdielového obrázka}
-Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
+Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Navyše je táto zmena závislá od rýchlosti pohybu ruky, čo nie je celkom ideálne pre neurónovú sieť, a zvyšuje nároky na veľkosť trénovacej množiny. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ sa ukázalo, že tento prístup má viac zlých vlastností ako dobrých.
 
-Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých sa rozhoduje čo pridať do výberu a čo nie. Tieto parametre veľmi závisia od osvetlenia. Navyše osvetlenie sa môže meniť pri pohybe ruky, čo veľmi sťažuje nastavenie správnych parametrov. Pred použitím aplikácie by sa aplikácia musela nakalibrovať, čo znižuje komfort jej použitia.
+Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých sa rozhoduje čo pridať do výberu a čo nie. Tieto parametre veľmi závisia od vlastností osvetlenia. Navyše osvetlenie sa môže meniť aj pri pohybe ruky, čo veľmi sťažuje nastavenie správnych parametrov. Pred použitím aplikácie by sa aplikácia musela nakalibrovať, čo znižuje komfort jej použitia. Pri zmene osvetlenia by ju bolo treba opäť prekalibrovať, čo by mohlo byť z hľadiska použiteľnosti neprípustné.
 
-Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívateľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
+Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívateľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme a algoritmus nemá šancu ruku vyselektovať.
 
-{\color{red}
-Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka (tabuľka \ref{tab:neuraldatacmp}). Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky. Pri vyhodnocovaní tejto časti sme použili menšiu trénovaciu a testovaciu sadu, ktorá obsahovala cca 350 trénovacích a 300 testovacích vzorov. Sada neobsahovala zle vybraté ruky.
-}
-
+Takto by sa nám veľmi zredukovala množina správnych rúk a tento prístup by sa dal použiť iba ako pomôcka, nie ako hlavné kritérium.
 
 \section{Návrh architektúr neurónových sietí}\label{chap:neuralnetarch}
 
 V tejto kapitole si popíšeme rôzne architektúry sietí, ktoré sme vyskúšali a porovnáme ich vlastnosti a úspešnosť pri riešení problému rozpoznania ruky a vyberieme vhodnú architektúru, ktorú potom použijeme v našej aplikácii.
 
-\subsection{Cieľ}
+\subsection{Požiadavky na architektúru neurónovej siete}
 
 Našim cieľom je vytvoriť vhodnú architektúru neurónovej siete, ktorá bude rozhodovať o danom vstupe, či zodpovedá ruke alebo nie. 
-Navrhneme niekoľko typov architektúr, ktoré neskôr porovnáme (\ref{chap:experiments}) a vyberieme najvhodnejšiu z nich, ktorú potom použijeme v aplikácií. 
+Navrhneme niekoľko typov architektúr, ktoré neskôr porovnáme (kapitola \ref{chap:experiments_arch}) a vyberieme najvhodnejšiu z nich, ktorú potom použijeme v aplikácií. 
 
 Neurónová sieť má rozdeliť vstupy do 2 tried - tie, ktoré zodpovedajú rukám a ostatné. Na to využijeme vo všetkých architektúrach jeden výstupný neurón.
 
+Budeme sa snažiť dosiahnuť čo najlepšiu úspešnosť a čo najvyššiu rýchlosť, čiže najmenšiu zložitosť\footnote{vzhľadom na počet váh} siete.
+
 \subsection{Typ 1: Viac vrstvová dopredná neurónová sieť}
 
-{\color{red}
-\textbf{Viac vrstvová dopredná neurónová sieť} (obr. \ref{fig:ffnn}) je neurónová sieť zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu. Viac o tomto type siete nájdete v kapitole \ref{chap:ffnn}.
-}
-%V našej implementácii siete sa ako vstup každého neurónu berie výstup každého neurónu z predošlej vrstvy. Prvá vrstva dostane pôvodný vstup. 
+Viac vrstvová dopredná neurónová sieť (obr. \ref{fig:ffnn}) je implementáciu klasického viacvrstvového perceptrónu, ktorý sme popísali v kapitole \ref{chap:ffnn}. Je zložená z viacerých vrstiev neurónov, pričom signál sa šíri len zo spodnejšej vrstve na vyššiu.
+
+Ako vstup každého neurónu berú výstupy neurónov z predošlej vrstvy. Prvá vrstva dostane na vstup vstup siete. 
+
+Ďalšie typy budú odvodené z tohto typu s tým, že na nich budú vykonané nejaké optimalizácie z hľadiska výkonu, alebo pridaná nejaká ďalšia informácia.
 
 \subsection{Typ 2: Upravená verzia viac vrstvovej doprednej neurónovej siete}
 
@@ -114,11 +113,12 @@ Neurónová sieť má rozdeliť vstupy do 2 tried - tie, ktoré zodpovedajú ruk
   \label{fig:dffnn}
 \end{figure}
 
-V upravenej verzii sme upravili spodnú vrstvu siete - tú, ktorá dostáva vstup. Vstup je rozdelený na 16 častí a ku každej časti je pridelených niekoľko neurónov. Každý neurón spracúva len vstupy z jeho časti (obr. \ref{fig:dffnn}). 
+Pri tomto type sme upravili spodnú(vstupnú) vrstvu siete. Vstup sme rozdelili na 16 častí ($4\times 4$) a ku každej časti sme pridelili niekoľko neurónov.
+Každý neurón spracúva len vstupy z jeho časti (obr. \ref{fig:dffnn}). 
 
-Jej výhodou je rýchlosť. Náš vstup má rozmer $128\times 128 = 16384$, čo nie je malé číslo. Rozdelíme ho na 16 častí s veľkosťou $32\times 32 = 1024$. Takto namiesto toho aby každý vstupný neurón počítal s 16384 vstupmi počíta len s 1024, čo je $16\times$ rýchlejšie. Skupina neurónov pridelená danej časti sa stará len o príznaky zo svojej časti a nie je ovplyvňovaná ostatnými časťami. 
+Jeho výhodou je zvýšenie rýchlosti pri rovnakom počte neurónov - zníži sa počet váh vstupných neurónov. Náš vstup má rozmer $128\times 128 = 16384$, čo nie je malé číslo. Keď ho rozdelíme na 16 častí, jednotlivé časti budú mať veľkosť $32\times 32 = 1024$. Takto namiesto toho aby každý vstupný neurón počítal s 16384 vstupmi počíta len s 1024, čo je $16\times$ menej. Skupina neurónov pridelená danej časti sa stará len o príznaky zo svojej časti a nie je ovplyvňovaná ostatnými časťami. 
 
-Nevýhodou je to, že neuróny sú fixne pridelené na jednotlivé vstupy. V pôvodnej sieti si neuróny sami vyberali, ktoré časti vstupu sú pre nich najvýznamnejšie a mohli tak lepšie pokryť vstup.
+Nevýhodou je to, že neuróny sú fixne pridelené na jednotlivé vstupy. V pôvodnej sieti si neuróny sami vyberali, ktoré časti vstupu sú pre nich najvýznamnejšie a mohli tak lepšie pokryť vstup. Môžme to však vykompenzovať miernym zvýšením počtu neurónov aby sme tak dosiahli optimálny pomer výkonu a úspešnosti.
 
 \subsection{Typ 3: Rekurentná neurónová sieť}
 
@@ -136,10 +136,6 @@ Naša architektúra rekurentnej neurónovej siete vychádza z upravenej dopredne
 
 Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný updatenutý výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
 
-Tento typ siete sme navrhli z ohľadom na už existujúce typy sietí a architektúru aplikácie. Umožňuje nám bez väčšieho zásahu použiť túto sieť tak, aby nám v každom kroku vedela povedať, či sa jedná o ruku alebo nie. Oproti predošlým typom sietí má navyše informáciu o tom ako reagovala sieť na predošlých rukách.
+Tento typ siete sme navrhli z ohľadom na už existujúce typy sietí a architektúru aplikácie. Umožňuje nám bez väčšieho zásahu použiť túto sieť tak, aby nám v každom kroku vedela povedať, či sa jedná o ruku alebo nie. Oproti predošlým typom sietí má navyše informáciu o tom ako reagovala sieť na predošlých obrázkoch rúk.
 
-Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom \textit{backpropagation} s tým, že sieti predkladáme postupnosti - vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie. Po každej postupnosti zresetujeme rekurentný vstup na 0.
-
-%TODO vysvetlit? 
-
-\todo
+Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom \textit{backpropagation} s tým, že sieti predkladáme postupnosti - vrámci nej sú dáta vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie, čo nám umožní odfiltrovať zlé obrázky z postupnosti, a nestratíme informáciu o tom ako sieť reagovala na poslednú ruku. Ruky v rámci postupnosti sa väčšinou od seba navzájom líšia len málo. Po každej postupnosti zresetujeme rekurentný vstup na 0, čím sa sieť dostane do východzieho stavu, kedy by mala reagovať na novú ruku - môže byť iná ako doteraz videné ruky.
