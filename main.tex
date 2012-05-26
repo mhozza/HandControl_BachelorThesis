@@ -12,6 +12,7 @@
 \usepackage{url}
 \usepackage[bookmarks]{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage{pdfpages}
 %\usepackage{mathptmx}
 %\usepackage[backend=biber,style=iso-authoryear,babel=other,bibencoding=UTF8]{biblatex} 
 \renewcommand\baselinestretch{1.3} % riadkovanie jeden a pol
@@ -146,6 +147,8 @@
 % \vfill\eject % EOP v
 % ~\vfill\eject % EOP vi % zadna strana prehlasenia je prazdna
 
+\includepdf{zadanie.pdf}
+
 {~}\vspace{12cm}
 
 \noindent
@@ -197,10 +200,11 @@ a pripomienky, priateľke, blízkym priateľom a rodine za morálnu podporu.
 
 \mainmatter
 
-\input intro.tex
-\input technologie.tex
+\input uvod.tex
+\input platforma_jazyk_kniznice.tex
 \input neuralnet.tex
 \input navrh.tex
+\input experimenty.tex
 \input implementacia.tex
 \input zaver.tex
 

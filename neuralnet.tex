@@ -47,9 +47,9 @@ $$f(x) = \frac{1}{1+e^{-x}}$$\medskip
 
 Z matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
 
-\section{Vrstva neurónovej siete}
+\section{Jednovrstvová neurónová sieť}
 
-Niekoľko perceptrónov vieme spojiť do jednej vrstvy. Získame tým vačší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach.
+Niekoľko perceptrónov vieme spojiť do jednej vrstvy. Získame tým väčší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach, kde môžme vrstvy pospájať.
 
 Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle, takže z praktického hľadiska je to skupina neurónov pracujúcich nad tým istým vstupom.
 
@@ -69,25 +69,26 @@ Viacvrstvová neurónová sieť vznikne spojením niekoľkých vrstiev. Nižšia
 
 Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z nich je napríklad funkcia xor \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
 
-Viacvrstvové neuónové siete sa trénujeme algoritmom backpropagation\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
+Viacvrstvové neurónové siete sa trénujeme algoritmom backpropagation\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
 
-\section{Rekurentná neurónová sieť}\label{chap:rnn}
+%
+%\section{Rekurentná neurónová sieť}\label{chap:rnn}
 
-V predchádzajúcich podkapitolách sme sa zaoberali doprednými sieťami (feedforward), v ktorých sa informácia šírila len smerom od vstupov k výstupu. V rekurentných sieťach máme navyše rekurentné spojenia, cez ktoré sa informácia prenáša v čase. Informácia z jednotlivých neurónov môže byť v ďalšom kroku použitá ako vstupná informácia pre neuróny.
+%V predchádzajúcich podkapitolách sme sa zaoberali doprednými sieťami (feedforward), v ktorých sa informácia šírila len smerom od vstupov k výstupu. V rekurentných sieťach máme navyše rekurentné spojenia, cez ktoré sa informácia prenáša v čase. Informácia z jednotlivých neurónov môže byť v ďalšom kroku použitá ako vstupná informácia pre neuróny.
 
-\begin{figure}[htbp]
-  \begin{center}
-    \includegraphics[width=0.15\textwidth]{images/recneuron}
-  \end{center}
-  \caption{Rekurentný neurón}
-  \label{fig:recurentneuron}
-\end{figure}
+%\begin{figure}[htbp]
+%  \begin{center}
+%    \includegraphics[width=0.15\textwidth]{images/recneuron}
+%  \end{center}
+%  \caption{Rekurentný neurón}
+%  \label{fig:recurentneuron}
+%\end{figure}
 
-Existuje veľké množstvo architektúr neurónových sietí, niektoré môžete nájsť v \cite[s. 755]{haykin1999neural}. My sme si vybrali oveľa jednoduchší model. Namiesto jednoduchých spojitých perceptrónov použijeme rekurentné neuróny (obr. \ref{fig:recurentneuron}).
+%Existuje veľké množstvo architektúr neurónových sietí, niektoré môžete nájsť v \cite[s. 755]{haykin1999neural}. My sme si vybrali oveľa jednoduchší model. Namiesto jednoduchých spojitých perceptrónov použijeme rekurentné neuróny (obr. \ref{fig:recurentneuron}).
 
-Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný updatenutý výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
+%Rekurentný neurón obsahuje navyše spätnú väzbu. Spätná väzba sa tvári ako ďalší vstup a obsahuje posledný updatenutý výstup toho istého neurónu. Po aktivácii neurónu môžeme updatnuť poslednú aktivačnú hodnotu. Ak to neurobíme, hodnota ostane taká, ako bola predtým. Neurón môžeme aj resetnúť, vtedy sa hodnota vynuluje.
 
-Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom backpropagation s tým, že sieti predkladáme postupnosti - vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie. Po každej postupnosti zresetujeme rekurentný vstup na 0.
+%Našu jednoduchú rekurentnú neurónovú sieť trénujeme tiež algoritmom backpropagation s tým, že sieti predkladáme postupnosti - vždy v tom istom poradí. Pri kladnej odozve updatujeme rekurentný vstup, ináč nie. Po každej postupnosti zresetujeme rekurentný vstup na 0.
 
 %TODO vysvetlit? 
 

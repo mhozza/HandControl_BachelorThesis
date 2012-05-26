@@ -5,5 +5,7 @@
 *.log
 *.out
 *.toc
+*.lot
+*.lof
 main.pdf
 main.ps
