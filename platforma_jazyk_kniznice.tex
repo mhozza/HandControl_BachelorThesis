@@ -1,13 +1,13 @@
 \chapter{Platforma, jazyk a knižnice}
 
-V~tejto kapitole sa budeme venovať použitým technológiám, použitému jazyku a dôvodom, prečo sme si ich vybrali.
+V~tejto kapitole sa budeme venovať použitej platforme, jazyku a knižniciam. Vysvetlíme dôvody, prečo sme si ich vybrali.
 \bigskip
 
-Vhodnou platformou pre vývoj aplikácií, ktoré pracujú s~perifériami je linux, pretože sú dostupné otvorené ovládače a vynikajúca podpora. S~perifériami sa pracuje v~linuxe velmi pohodlne, každé zariadenie má vlastný súbor ktorý sa nachádza v~{\tt /dev/}.
+Vhodnou platformou pre vývoj aplikácií, ktoré pracujú s~perifériami je linux, pretože sú dostupné otvorené ovládače a vynikajúca podpora. S~perifériami sa pracuje v~linuxe velmi pohodlne, každé zariadenie má vlastný súbor, ktorý sa nachádza v~{\tt /dev/}.
 Keďže linux je písaný hlavne v~jazyku C, prevažná väčšina knižníc pre linux sa dodáva aj s~hlavičkovými súbormi pre jazyk C a C++.
 Preto je jazyk C++ veľmi vhodný pre programovanie pre túto platformu. Navyše je objektovo orientovaný a umožnuje jednoduché použitie komplexných dátových štruktúr.
 
-Programovanie nám uľahčia už hotové knižnice. Využijeme knižnicu \textit{Qt} (multiplatformová knižnica umožnujúca vytváranie okien, správu vlákien a mnohé iné),
+Programovanie a prácu nám uľahčia už hotové knižnice. Využijeme knižnicu \textit{Qt} (multiplatformová knižnica umožnujúca vytváranie okien, správu vlákien a mnohé iné),
 video for linux 2(\textit{v4l2} - na prácu z~webkamerou), \textit{fftw3} (rýchla knižnica počítajúca fourierovu transformáciu) a \textit{Xtst}(knižnica ktorá okrem iného umožnuje simulovanie kláves v~X servri).
 
 Aplikácia využíva vlákna, na paralelizáciu a urýchlenie niektorých výpočtov.
