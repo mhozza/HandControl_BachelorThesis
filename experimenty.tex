@@ -54,17 +54,17 @@ Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
-\begin{tabular}{|l|c|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|}
 \cline{2-5}
-\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
 \hline
-\textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{čas} \\ \hline
-30 & 64,3 & 0,1036 & 99,8 & 0,001 &\\ \hline
-40 & 63,22 & 0,0956 & 99,8 & 0,001 &\\ \hline
-45 & 64,19 & 0,098 & 99,8 & 0,001 &\\ \hline
-47 & 65,07 & 0,099 & 100 & 0,0004 &\\ \hline
-55 & 63,46 & 0,099 & 100 & 0,0004 &\\ \hline
-60 & 63,48 & 0,099 & 100 & 0,0003 &\\ 
+\textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} \\ \hline
+30 & 64,3 & 0,1036 & 99,8 & 0,001 \\ \hline
+40 & 63,22 & 0,0956 & 99,8 & 0,001 \\ \hline
+45 & 64,19 & 0,098 & 99,8 & 0,001 \\ \hline
+47 & 65,07 & 0,099 & 100 & 0,0004 \\ \hline
+55 & 63,46 & 0,099 & 100 & 0,0004 \\ \hline
+60 & 63,48 & 0,099 & 100 & 0,0003 \\ 
 \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti doprednej NS pri rôznych počtoch neurónov}
@@ -75,25 +75,40 @@ Môžeme si všimnúť, že pridávanie neurónov donekonečna nemusí pomôcť 
 
 \subsection{Typ 2: Upravená verzia viac vrstvovej doprednej neurónovej siete}
 
-Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v tabuľke sa budú teda vyskytovať obe. Vrstvy sú oddelené ,,;'' a sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v zátvorke počet neurónov na jednu časť obrázka.
+Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v tabuľke \ref{tab:neuroncountcmp2} sa budú teda vyskytovať obe. Vrstvy sú oddelené ,,;'' a sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v zátvorke počet neurónov na jednu časť obrázka.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
-\begin{tabular}{|l|c|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|}
 \cline{2-5}
-\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
 \hline
-\textbf{Počet neurónov} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
-48; 12 & 83,33\% & 0,0745 & & &\\ \hline
-112; 12 & 84,07\% & 0,0714 & & &\\
-\hline
+\textbf{Počet neurónov} & \textbf{úspešnosť}\% & \textbf{chyba} & \textbf{úspešnosť}\% & \textbf{chyba} \\ \hline
+48(3)& 66,39 & 0,0872 & 99,39 & 0,0131 \\ \hline
+112(7)& 66,56 & 0,1015 & 99,65 & 0,004 \\ \hline 
+176(11)& 67,47 & 0,0957 & 99,39 & 0,0112 \\ \hline
+240(15)& 64,89 & 0,1207 & 99,83 & 0,0016 \\ \hline
+320(20)& 64,12 & 0,1108 & 99,91 & 0,0007 \\ \hline
+7; 48(3)& 66,32 & 0,0947 & 99,53 & 0,0038 \\ \hline 
+7; 112(7)& 67,05 & 0,1042 & 99,21 & 0,0053 \\ \hline 
+7; 176(11)& 67,37 & 0,1038 & 99,56 & 0,0023 \\ \hline
+7; 208(13)& 65,8  & 0,1035 & 99,36 & 0,0052 \\ \hline 
+7; 272(17)& 66,14 & 0,1032 & 98,95 & 0,0078 \\ \hline 
+7; 320(20)& 65,84& 0,1156 & 99,91 & 0,0009\\ \hline 
+11; 112(7)& 64,1 & 0,1108 & 99,91 & 0,0004 \\ \hline
+12; 144(9)& 66,27 & 0, 0978 & 99,74 & 0,003 \\ \hline
+12; 480(30)& 67.24 & 0,0983 & 99,53 & 0,0023 \\ \hline 
+13; 208(13)& 63,86 & 0,1001 & 99,33 & 0,0036 \\ \hline 
+17; 112(7)& 62,52 & 0,1043 & 100 & 0,0023 \\ \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti upravenej NS pri rôznych počtoch neurónov}
 \label{tab:neuroncountcmp2}
 \end{table}
 
-\todo
+Všimnime si že tretia vrstva nám v úspešnosti veľmi nepomohla, hoci skrátila dobu trénovania - stačila asi 1/4 epôch oproti 2 vrstvám. Keďže ale v praxi je pridanie ďalšej vrstvy spomalením, tak dve vrstvy budú v tomto prípade lepšie.
+
+Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, pričom sieť obsahuje menej váh, čiže sa rýchlejšie trénuje aj rýchlejšie počíta.
 
 \subsection{Typ 3: Rekurentná neurónová sieť}
 \todo
@@ -101,15 +116,15 @@ Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúr
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
-\begin{tabular}{|l|c|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|}
 \cline{2-5}
-\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} \\ 
 \hline
-\textbf{Rekurentná vrstva} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
-spodná & 83,33\% & 0,0745 & & &\\ \hline
+\textbf{Rekurentná vrstva} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba}  \\ \hline
+%spodná & 83,33\% & 0,0745 & & \\ \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti rekurentnej NS pri rôznom umiestnení rekurencie}
-\label{tab:neuroncountcmp2}
+\label{tab:neuroncountcmp3}
 \end{table}
 
 \subsection{Zhrnutie}
