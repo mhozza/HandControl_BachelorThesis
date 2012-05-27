@@ -1,4 +1,5 @@
-\chapter{Experimenty}\label{chap:experiments}
+\chapter{Experimenty}
+\label{chap:experiments}
 
 V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, porovnáme ich úspešnosť a ukážeme, ktorá z~nich je najvhodnejšia. Ďalej sa budeme venovať aj predspracovaniu segmentov, ktoré priamo ovplyvňuje vlastnosti trénovania a úspešnosť sietí.
 \bigskip
@@ -34,7 +35,7 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
 \hline
 \textbf{Sada} & \textbf{ruky} & \textbf{ostatné} & \textbf{ruky} & \textbf{ostatné} \\ \hline
-1. sada & & & & \\ \hline
+1. sada & 168 & 478 & 245  & 568 \\ \hline
 2. sada & & & & \\ 
 \hline
 \end{tabular}
@@ -42,15 +43,13 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \label{tab:neuroncountcmp}
 \end{table}
 
+Keďže obrázkov rúk je v dátach menej ako ostatných a sieť, ktorá by na všetko povedala že to ruka nie je by mala úspešnosť $>60\%$, percentuálnu úspešnosť počítame ako \textbf{priemer percentuálnej úspešnosti} na rukách a na ostatných obrázkoch.
+
 \section{Porovnanie architektúr neurónových sietí}
 
+\subsection{Typ 1: Viac vrstvová dopredná neurónová sieť}
 
-%Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha.
-
-% - 3vrstvovú sieť sa nám ani nepodarilo natrénovať 
-%{\color{red}
-%V tabuľke \ref{tab:neuroncountcmp} je porovnanie úspešnosti na testovacích dátach pre rôzne počty neurónov a priemerná kvadratická chyba.
-%}
+Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha -- nedarilo sa nám ju natrénovať. V tabuľke \ref{tab:neuroncountcmp} uvádzame úspešnosti pre 2-vrstvovú sieť na dátach fourierovych transformácií.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -59,32 +58,24 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \cline{2-5}
 \multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
 \hline
-\textbf{Počet neurónov} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
-40 & 81,11\% & 0,0818 & & &\\ \hline
-45 & 85.55\% & 0,0643 & & &\\ \hline
-50 & 85,19\% & 0,0667 & & &\\ \hline
-60 & 85,19\% & 0,0634 & & &\\ 
+\textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{čas} \\ \hline
+30 & 64,3 & 0,1036 & 99,8 & 0,001 &\\ \hline
+40 & 63,22 & 0,0956 & 99,8 & 0,001 &\\ \hline
+45 & 64,19 & 0,098 & 99,8 & 0,001 &\\ \hline
+47 & 65,07 & 0,099 & 100 & 0,0004 &\\ \hline
+55 & 63,46 & 0,099 & 100 & 0,0004 &\\ \hline
+60 & 63,48 & 0,099 & 100 & 0,0003 &\\ 
 \hline
 \end{tabular}
-\caption{Porovnanie úspešnosti NS pri rôznych počtoch neurónov}
+\caption{Porovnanie úspešnosti doprednej NS pri rôznych počtoch neurónov}
 \label{tab:neuroncountcmp}
 \end{table}
 
-%\subsection{Viac vrstvová dopredná neurónová sieť - upravená verzia}
+Môžeme si všimnúť, že pridávanie neurónov donekonečna nemusí pomôcť a zbytočne veľa neurónov môže aj uškodiť.
 
-%\begin{figure}[h]
-%  \begin{center}
-%    \includegraphics[width=0.3\textwidth]{images/dffnn}
-%  \end{center}
-%  \caption{Upravená dopredná neurónová sieť}
-%  \label{fig:dffnn}
-%\end{figure}
+\subsection{Typ 2: Upravená verzia viac vrstvovej doprednej neurónovej siete}
 
-%V upravenej verzii sme upravili spodnú vrstvu siete - tú, ktorá dostáva vstup. Vstup je rozdelený na 16 častí a ku každej časti je pridelených niekoľko neurónov. Každý neurón spracúva len vstupy z jeho časti (obr. \ref{fig:dffnn}). 
-
-%Jej výhodou je rýchlosť. Náš vstup má rozmer $128\times 128 = 16384$, čo nie je malé číslo. Rozdelíme ho na 16 častí s veľkosťou $32\times 32 = 1024$. Takto namiesto toho aby každý vstupný neurón počítal s 16384 vstupmi počíta len s 1024, čo je $16\times$ rýchlejšie. Skupina neurónov pridelená danej časti sa stará len o príznaky zo svojej časti a nie je ovplyvňovaná ostatnými časťami. 
-
-%Nevýhodou je to, že neuróny sú fixne pridelené na jednotlivé vstupy. V pôvodnej sieti si neuróny sami vyberali, ktoré časti vstupu sú pre nich najvýznamnejšie a mohli tak lepšie pokryť vstup.
+Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v tabuľke sa budú teda vyskytovať obe. Vrstvy sú oddelené ,,;'' a sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v zátvorke počet neurónov na jednu časť obrázka.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -102,15 +93,10 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \label{tab:neuroncountcmp2}
 \end{table}
 
-%{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
-%TODO popisat aj pocty pouzitych neuronou 
-%TODO trenovacie data do tabuliek
-
 \todo
 
-%\subsection{Rekurentná neurónová sieť}
-
-%Architektúra našej rekurentnej neurónovej siete vychádza z upravenej doprednej neurónovej siete, s tým, že namiesto obyčajného neurónu používame v niektorej vrstve rekurentný neurón (obr. \ref{fig:recurentneuron}). Viac o tomto type siete nájdete v kapitole \ref{chap:rnn}.
+\subsection{Typ 3: Rekurentná neurónová sieť}
+\todo
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -126,8 +112,14 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 \label{tab:neuroncountcmp2}
 \end{table}
 
-%\todo
-%end NeuralNet
+\subsection{Zhrnutie}
+
+%{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
+%TODO popisat aj pocty pouzitych neuronou 
+%TODO trenovacie data do tabuliek
+
+\todo
+
 
 %\section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
 %\label{sect:metodyzlepseniaklasifikacie}
@@ -146,9 +138,21 @@ spodná & 83,33\% & 0,0745 & & &\\ \hline
 
 %TODO Popisat preco je to nutne a v com to pomaha
 
+\section{Porovnanie rôznych typov dát}
+
 \todo 
 
-\section{Porovnanie rôznych typov dát}
+\subsection{Fourierova transformácia}
+
+\todo 
+
+\subsection{Rozdielový vs. pôvodný obraz}
+
+\todo 
+
+\subsection{Zhrnutie}
+
+\todo 
 %Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
 
 %Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých sa rozhoduje čo pridať do výberu a čo nie. Tieto parametre veľmi závisia od osvetlenia. Navyše osvetlenie sa môže meniť pri pohybe ruky, čo veľmi stažuje nastavenie správnych parametrov. Pred použitím aplikácie by sa aplikácia musela nakalibrovať, čo znižuje komfort jej použitia.
