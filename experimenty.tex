@@ -84,7 +84,7 @@ Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúr
 \cline{2-5}
 \multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
 \hline
-\textbf{Počet neurónov} & \textbf{úspešnosť}\% & \textbf{chyba} & \textbf{úspešnosť}\% & \textbf{chyba} \\ \hline
+\textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} \\ \hline
 48(3)& 66,39 & 0,0872 & 99,39 & 0,0131 \\ \hline
 112(7)& 66,56 & 0,1015 & 99,65 & 0,004 \\ \hline 
 176(11)& 67,47 & 0,0957 & 99,39 & 0,0112 \\ \hline
@@ -120,7 +120,7 @@ Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, 
 \cline{2-5}
 \multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} \\ 
 \hline
-\textbf{Rekurentná vrstva} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba}  \\ \hline
+\textbf{Rekurentná vrstva} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba}  \\ \hline
 %spodná & 83,33\% & 0,0745 & & \\ \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti rekurentnej NS pri rôznom umiestnení rekurencie}
@@ -189,22 +189,22 @@ Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, 
 %Úspešnosť na testovacej množine bola mierne nižšia.
 %\todo
 
-\begin{table}[h]
-\catcode`\-=12 %kvoli babelu a pomlcke
-\centering
-\begin{tabular}{|l|c|c|c|c|c|}
-\cline{2-5}
-\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
-\hline
-\textbf{Typ dát} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
-\textbf{Rozdielový obr.} & 83,33\% & 0,0745 & & & \\ \hline
-\textbf{Pôvodný obr.} & 68,52\% & 0,1174& & &\\ \hline
-\textbf{Rozdielový -- FT} & 75,18\%& 0,0895& & &\\ \hline
-\textbf{Pôvodný -- FT} & 70.37\%& 0,1158& & &\\
-\hline
-\end{tabular}
-\caption{Porovnanie úspešnosti NS pri rôznych dátach}
-\label{tab:neuraldatacmp}
-\end{table}
+%\begin{table}[h]
+%\catcode`\-=12 %kvoli babelu a pomlcke
+%\centering
+%\begin{tabular}{|l|c|c|c|c|c|}
+%\cline{2-5}
+%\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
+%\hline
+%\textbf{Typ dát} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
+%\textbf{Rozdielový obr.} & 83,33\% & 0,0745 & & & \\ \hline
+%\textbf{Pôvodný obr.} & 68,52\% & 0,1174& & &\\ \hline
+%\textbf{Rozdielový -- FT} & 75,18\%& 0,0895& & &\\ \hline
+%\textbf{Pôvodný -- FT} & 70.37\%& 0,1158& & &\\
+%\hline
+%\end{tabular}
+%\caption{Porovnanie úspešnosti NS pri rôznych dátach}
+%\label{tab:neuraldatacmp}
+%\end{table}
 
-\todo
+%\todo
