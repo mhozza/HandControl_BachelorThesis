@@ -106,12 +106,12 @@ Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúr
 \label{tab:neuroncountcmp2}
 \end{table}
 
-Všimnime si že tretia vrstva nám v úspešnosti veľmi nepomohla, hoci skrátila dobu trénovania - stačila asi 1/4 epôch oproti 2 vrstvám. Keďže ale v praxi je pridanie ďalšej vrstvy spomalením, tak dve vrstvy budú v tomto prípade lepšie.
+Všimnime si že tretia vrstva nám v úspešnosti veľmi nepomohla, hoci skrátila dobu trénovania - stačila asi 1/4 epoch oproti 2 vrstvám. Keďže ale v praxi je pridanie ďalšej vrstvy spomalením, tak dve vrstvy budú v tomto prípade lepšie.
 
 Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, pričom sieť obsahuje menej váh, čiže sa rýchlejšie trénuje aj rýchlejšie počíta.
 
 \subsection{Typ 3: Rekurentná neurónová sieť}
-\todo
+Pri tomto type sietí sme mali viacero možností ako zvoliť rekurentné neuróny. Mohli sme ich nechať len na spodnej vrstve, alebo sme ich mohli dať do celej neurónovej siete.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -121,37 +121,41 @@ Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, 
 \multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} \\ 
 \hline
 \textbf{Rekurentná vrstva} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba}  \\ \hline
-%spodná & 83,33\% & 0,0745 & & \\ \hline
+spodná(11) &  67,88 & 0,1106 & 98,8 & 0,005  \\ \hline
+spodná(20) & 67,01 & 0,109 & 99,47 & 0,0029  \\ \hline
+všetky(11) & 61,84 & 0,1055 & 99,82 & 0,0026  \\ \hline
+všetky(20) & 65,07 & 0,1116 & 99,47 & 0,0033  \\ \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti rekurentnej NS pri rôznom umiestnení rekurencie}
+\label{tab:reclayercmp}
+\end{table}
+
+V tabuľke \ref{tab:reclayercmp} vidíme, že lepšie si počína sieť s rekurenciou len na spodnej vrstve. Obe siete sú 2-vrstvové, v zátvorke je počet neurónov na jednu časť dát -- tak ako v predošlej kapitole. Informácie z vyšších vrstiev sú pre sieť mätúce. V ďalších testoch teda budeme vychádzať z architektúry, ktorá má rekurentné neuróny len na spodnej vrstve.
+
+\begin{table}[h]
+\catcode`\-=12 %kvoli babelu a pomlcke
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\cline{2-5}
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
+\hline
+\textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} \\ \hline
+112(7) & 65,63 & 0,1049 & 98,54 & 0,0056  \\ \hline
+144(9) & 64,37 & 0,0984 & 98,8 & 0,0116  \\ \hline
+176(11) & 67,88 & 0,1106 & 98,8 & 0,005  \\ \hline
+176(13) & 65,68 & 0,0961 & 98,34 & 0,0154  \\ \hline
+176(15) & 67,88 & 0,1106 & 98,8 & 0,005  \\ \hline %TODO
+320(20) & 67,01 & 0,109 & 99,47 & 0,0029 \\ \hline
+\end{tabular}
+\caption{Porovnanie úspešnosti rekurentnej NS pri rôznych počtoch neurónov}
 \label{tab:neuroncountcmp3}
 \end{table}
 
-\subsection{Zhrnutie}
-
-%{\color{red} Keď si porovnáme tabuľku \ref{tab:neuroncountcmp2} s tabuľkou \ref{tab:neuroncountcmp} zistíme, že rozdiel v úspešnosti nie je veľký. Preto sme sa rozhodli, že použijeme radšej túto architektúru. Trénovanie aj klasifikácia je značne rýchlejšia.}
-%TODO popisat aj pocty pouzitych neuronou 
-%TODO trenovacie data do tabuliek
-
 \todo
 
+\subsection{Zhrnutie}
 
-%\section{Metódy na zlepšenie úspešnosti klasifikátora ruky}
-%\label{sect:metodyzlepseniaklasifikacie}
-
-%V tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predkladať neurónovej sieti, aby nám povedala, či je to ruka, alebo nie.
-
-%\subsection{Trénovacia a testovacia množina}
-%\todo 
-
-%\subsection{Normalizácia dát} %TODO Dat inde? asi nie
-%Ideálne vstupy pre neurónovú sieť sú z intervalu $\langle 0,1\rangle$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z tohto dôvodu chceme, aby rozdiel v normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
-
-%$$f(x)=\frac{1}{1+x}$$
-
-%Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. %TODO dôvod? 
-
-%TODO Popisat preco je to nutne a v com to pomaha
+\todo
 
 \section{Porovnanie rôznych typov dát}
 
