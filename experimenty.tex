@@ -9,7 +9,7 @@ V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, 
 %TODO treba citaciu?
 Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s~informáciou či sa jedná o~ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
-Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme updatli len v~prípade, že sme detekovali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v~reálnej aplikácii.
+Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme updatli len v~prípade, že sme rozpoznali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v~reálnej aplikácii.
 
 \section{Testovanie a vyhodnocovanie neurónových sietí}
 Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto metriku.
@@ -51,7 +51,7 @@ Keďže obrázkov rúk je v dátach menej ako ostatných a sieť, ktorá by na v
 
 Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha -- nedarilo sa nám ju natrénovať. V tabuľke \ref{tab:neuroncountcmp} uvádzame úspešnosti pre 2-vrstvovú sieť na dátach fourierovych transformácií.
 
-\begin{table}[h]
+\begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
 \begin{tabular}{|l|c|c|c|c|}
@@ -77,7 +77,7 @@ Môžeme si všimnúť, že pridávanie neurónov donekonečna nemusí pomôcť 
 
 Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v tabuľke \ref{tab:neuroncountcmp2} sa budú teda vyskytovať obe. Vrstvy sú oddelené ,,;'' a sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v zátvorke počet neurónov na jednu časť obrázka.
 
-\begin{table}[h]
+\begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
 \begin{tabular}{|l|c|c|c|c|}
@@ -113,7 +113,7 @@ Oproti sieťam typu 1, vidíme určitý nárast úspešností približne o 2\%, 
 \subsection{Typ 3: Rekurentná neurónová sieť}
 Pri tomto type sietí sme mali viacero možností ako zvoliť rekurentné neuróny. Mohli sme ich nechať len na spodnej vrstve, alebo sme ich mohli dať do celej neurónovej siete.
 
-\begin{table}[h]
+\begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
 \begin{tabular}{|l|c|c|c|c|}
@@ -130,9 +130,9 @@ všetky(20) & 65,07 & 0,1116 & 99,47 & 0,0033  \\ \hline
 \label{tab:reclayercmp}
 \end{table}
 
-V tabuľke \ref{tab:reclayercmp} vidíme, že lepšie si počína sieť s rekurenciou len na spodnej vrstve. Obe siete sú 2-vrstvové, v zátvorke je počet neurónov na jednu časť dát -- tak ako v predošlej kapitole. Informácie z vyšších vrstiev sú pre sieť mätúce. V ďalších testoch teda budeme vychádzať z architektúry, ktorá má rekurentné neuróny len na spodnej vrstve.
+V tabuľke \ref{tab:reclayercmp} vidíme, že lepšie si počína sieť s rekurenciou len na spodnej vrstve. Obe siete sú 2-vrstvové, v zátvorke je počet neurónov na jednu časť dát -- tak ako v predošlej kapitole. Informácie z vyšších vrstiev sú pre sieť mätúce. V ďalších testoch (tabuľka \ref{tab:neuroncountcmp3}) teda budeme vychádzať z architektúry, ktorá má rekurentné neuróny len na spodnej vrstve. Vyskúšame 2 aj 3-vrstvové architektúry.
 
-\begin{table}[h]
+\begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
 \centering
 \begin{tabular}{|l|c|c|c|c|}
@@ -141,25 +141,28 @@ V tabuľke \ref{tab:reclayercmp} vidíme, že lepšie si počína sieť s rekure
 \hline
 \textbf{Počet neurónov} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba} \\ \hline
 112(7) & 65,63 & 0,1049 & 98,54 & 0,0056  \\ \hline
-144(9) & 64,37 & 0,0984 & 98,8 & 0,0116  \\ \hline
+%144(9) & 64,37 & 0,0984 & 98,8 & 0,0116  \\ \hline
 176(11) & 67,88 & 0,1106 & 98,8 & 0,005  \\ \hline
-176(13) & 65,68 & 0,0961 & 98,34 & 0,0154  \\ \hline
-176(15) & 67,88 & 0,1106 & 98,8 & 0,005  \\ \hline %TODO
+%208(13) & 65,68 & 0,0961 & 98,34 & 0,0154  \\ \hline
+240(15) & 65,16 & 0,1173 & 99,53 & 0,0028  \\ \hline
 320(20) & 67,01 & 0,109 & 99,47 & 0,0029 \\ \hline
+7; 176(11) & 66,13 & 0,1107 & 99,74 & 0,0018 \\ \hline
+12; 144(9) & 65,73 & 0,0937 & 98,87 & 0,0083 \\ \hline
 \end{tabular}
 \caption{Porovnanie úspešnosti rekurentnej NS pri rôznych počtoch neurónov}
 \label{tab:neuroncountcmp3}
 \end{table}
 
-\todo
+Ani v tomto prípade nám nepomohla ďalšia vrstva. Pri 2-vrstvových architektúrach rekurencia mierne pomohla.
 
 \subsection{Zhrnutie}
 
-\todo
+%TODO časy a trenovanie?
+Vylepšeniami architektúry sa nám podarilo zdvihnúť úspešnosť o \textbf{2,81\%} a nájsť architektúru s úspešnosťou \textbf{67,88\%}. Ukázalo sa, že je lepšie použiť 2-vrstvovú sieť ako 3-vrstvovú. Ďalej sme zistili, že keď budú mať neuróny prístup len k časti obrázka, môžeme ich použiť viac a dosiahnuť lepšiu úspešnosť. Nakoniec sa nám podarilo ukázať, že pridaním rekurentných spojení na spodnú vrstvu dokážeme ešte trochu zvýšiť úspešnosť.
+
+Úspešnosť na rukách sa pohybovala okolo 40-50\% a na ostatných obrázkoch 80-90\%. Sieť teda dokáže dobre odfiltrovať zlé obrázky, pričom má pomerne dobrú úspešnosť aj na rukách.
 
 \section{Porovnanie rôznych typov dát}
-
-\todo 
 
 \subsection{Fourierova transformácia}
 
