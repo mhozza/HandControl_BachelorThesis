@@ -1,4 +1,5 @@
-\chapter{Implementácia}\label{chap:implementation}
+\chapter{Implementácia}
+\label{chap:implementation}
 
 V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily jednotlivých častí algoritmu.
 
@@ -21,7 +22,8 @@ Ku každej z~týchto úrovní máme všeobecnú triedu a rôzne implementácie. 
     \label{fig:nnclsdiag}
 \end{figure}
 
-\subsection{Perceptron} \label{sect:perceptron}
+\subsection{Perceptron}
+\label{sect:perceptron}
 \textit{Perceptron} je abstraktná trieda, ktorá zovšeobecňuje rôzne typy perceptrónov, ktoré sa líšia rôznymi aktivačnými funkciami.
 
 Obsahuje trénovací algoritmus pre perceptróny
@@ -112,7 +114,9 @@ Spojením dvoch typov vrstiev získavame máme nový typ vrstvy, ktorá obsahuje
 \subsection{NeuralNetwork}
 Trieda \textit{NeuralNetwork} zoskupuje vrstvy do viacvrstvovej siete. Implementuje viacvrstvovú sieť s~vrstvami typu \textit{NeuralLayer} a zároveň slúži ako základná trieda pre neurónové siete, od ktorej potom dedia ostatné siete.
 
-Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načítanie váh do/zo súboru.
+Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načítanie váh do/zo súboru. 
+
+Dediace triedy väčšinou mierne menia architektúru napríklad použitím iného typu vrstvy. Tieto zmeny sa zvyknú robiť v konštruktore.
 
 \subsubsection{Dôležité metódy}
 \begin{itemize}
@@ -127,15 +131,13 @@ Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načít
 \end{itemize}
 
 \subsection{DistributedNeuralNetwork}
-\todo
+Trieda \textit{DistributedNeuralNetwork} dedí z \textit{NeuralNetwork}. Jedinou zmenou je, že ako spodnú vrstvu používa \textit{DistributedNeuralLayer}.
 
 \subsection{RecurrentNetwork}
-%TODO ak sa zmeni implementacia na viac rekurentnych vrstiev, tak treba aj toto upravit
-Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. %Ako spodnú vrstvu používa 
-\todo
+Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. Ako spodnú vrstvu používa \textit{RecurrentLayer}. Okrem toho implementuje metódy \method{update()} a \method{reset()}, ktoré updatujú a resetujú rekurentnú vrstvu.
 
 \subsection{DistributedRecurrentNetwork}
-\todo
+Trieda \textit{DistributedRecurrentNetwork} dedí z \textit{RecurrentNetwork}. Ako spodnú vrstvu používa \textit{DistributedRecurrentLayer}.
 
 \section{Triedy pre obrázky}
 
@@ -181,6 +183,7 @@ Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \
 Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z~tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V~prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
 \section{Spracovanie obrazu}
+\label{chap:imageprocess}
 \subsection{Trieda ImageProcessor}
 Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
