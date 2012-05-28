@@ -43,7 +43,8 @@ Z~každého pixla spravíme štvorec s~veľkosťou $11\times 11$.
 Hodnota 11 pre stranu štvorca sa ukázala ako najvhodnejšia. 
 Príliš veľké hodnoty spájajú aj časti, ktoré nepatria do toho istého segmentu, príliš malé zase nespoja časti, ktoré sú ďalej od seba.
 
-\subsection{Segmentácia}\label{chap:segment}
+\subsection{Segmentácia}
+\label{chap:segment}
 Rozpitý obrázok si teraz vieme predstaviť ako graf, pričom hrana je medzi každými 2 susediacimi pixlami (v~štyroch smeroch). Segmentácia je vlastne len nájdenie komponentov v~tomto grafe. Na to môžeme použiť napríklad prehľadávanie do šírky. 
 
 Potrebujeme ešte nájsť opísaný obdĺžnik. To spravíme tak, že nájdeme najľavejší, najpravejší, najvrchnejší a najspodnejší bod segmentu.
@@ -56,14 +57,16 @@ V~tejto časti sa budeme zaoberať jednotlivými segmentami, ktoré budeme predk
 
 Každý nájdený obdĺžnik sa naškáluje na veľkosť vstupu pre neurónovú sieť - v~našom prípade $128\times 128$ - a normalizuje sa. 
 
-\subsubsection{Normalizácia dát} \label{chap:normalisation}
+\subsubsection{Normalizácia dát} 
+\label{chap:normalisation}
 Ideálne vstupy pre neurónovú sieť sú z~intervalu $\langle 0,1\rangle$. Pixle čiernobielych obrázkov majú hodnoty $\{0\dots 255\}$. Pri obrázkoch zvolíme pre farbu pozadia hodnotu 0 a pre objekt ostatné hodnoty. Z~tohto dôvodu chceme, aby rozdiel v~normalizovanej hodnote medzi 0 a 1 bol najväčší a postupne klesal. Preto sme za normalizačnú funkciu zvolili:
 
 $$f(x)=\frac{1}{1+x}$$
 
 Pre normalizáciu fourierovej transformácie sme zvolili tú istú funkciu. Hodnoty vo fourierovej transformácii môžu byť veľmi veľké, preto chceme eliminovať vplyv príliš veľkých hodnôt. Navyše nám to umožňuje stlačiť hodnoty do intervalu $\langle 0,1\rangle$ aj bez toho, aby sme poznali maximálnu hodnotu.
 
-\subsubsection{Fourierova transformácia} \label{chap:ft}
+\subsubsection{Fourierova transformácia}
+\label{chap:ft}
 Fourierova transformácia zvykne často pomáhať, keď sa použije na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť. Navyše fourierove transformácie obrázkov rúk mali určité typické vlastnosti (obr. \ref{fig:fft}).
 
 \begin{figure}[htp]
