@@ -440,7 +440,7 @@ Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia
 
 \textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
 
-\todo
+\textbf{Použitie:} {\tt ./CreateFFT image.ppm}
 
 \subsubsection{NeuralNet}
 %\label{chap:neuralnetapp}
@@ -448,7 +448,19 @@ Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia
 
 Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
 
-\todo
+Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z ktorého sa získa informácia do ktorej postupnosti a framu prvok patrí.
+
+\textbf{Použitie:} {\tt ./NeuralNet architektura pocet\_epoch vypisy typ\_dat cesta\_ruky cesta\_ostatne vahy\_vstup vahy\_vystup}
+\begin{itemize}
+\item \underline{architektura} \textit{n} - dopredná, \textit{r} - rekurentná, \textit{c} - z konzoly
+\item \underline{pocet\_epoch} - počet epoch alebo 0 pre testovanie
+\item \underline{vypisy} - miera výpisov do konzoly
+\item \underline{typ\_dat} - \textit{0} - fourierove transformácie, \textit{1} - obrázky s čiernym pozadím, \textit{3} - obrázky s bielym pozadím
+\item \underline{cesta\_ruky} - cesta k dátam rúk
+\item \underline{cesta\_ostatne} - cesta k ostatným dátam
+\item \underline{vahy\_vstup} - súbor z ktorého sa načítajú váhy
+\item \underline{vahy\_vystup} - súbor do ktorého sa uložia váhy
+\end{itemize}
 
 \subsubsection{Skripty}
 Pre zjednodušenie práce sme si napísali rôzne skripty na jednoduché spúštanie trénovania, testovania a na rozdelovanie vstupov do príslušných adresárov.
