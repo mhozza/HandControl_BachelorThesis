@@ -171,11 +171,47 @@ Metóda \method{mask(HCImage *mask, bool invert = false)} aplikuje masku na obr�
 Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Využívame bitové operátory na urýchlenie výpočtu. %Každý pixel skombinuje s~pixlom masky. 
 
 \subsubsection{Floodfill selekcia}
-Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde \method{getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)}. Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
+Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde \method{getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)} (Obr. \ref{fig:getAdaptiveFloodFillSelectionMask}). Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
 
 Metóda vráti obrázok, ktorý sa dá použiť ako maska, ktorá odstráni\footnote{začierni} pixle, ktoré neboli vybraté pomocou techniky \textit{floodfill}.
 
 Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
+
+\begin{figure}[htp]
+\begin{lstlisting}
+template <class T>
+HCImage<T>* HCImage<T>::getAdaptiveFloodFillSelectionMask(unsigned sx, unsigned sy, int treshold, float originalFactor, float changeFactor)
+{
+  T reference = getAverageColor(sx,sy);
+  ImageBuffer b;
+  b.resize(width()*height(),0);
+  queue<pair<pair<unsigned,unsigned>,T> > f;
+  f.push(make_pair(make_pair(sx,sy),reference));
+  while(!f.empty())
+  {
+      unsigned x = f.front().first.first;
+      unsigned y = f.front().first.second;
+      T refcolor = f.front().second;
+      f.pop();
+      if(x>=width()) continue;
+      if(y>=height()) continue;
+
+      T color = pixel(x,y);
+      if(!similar(refcolor,color,treshold) || b[x+y*w]!=T(0)) continue;
+      b[x+y*w]=0xffffffff;
+      refcolor = reference*originalFactor + (refcolor*changeFactor+color*(1-changeFactor))*(1-originalFactor);
+
+      f.push(make_pair(make_pair(x+1,y),refcolor));
+      f.push(make_pair(make_pair(x-1,y),refcolor));
+      f.push(make_pair(make_pair(x,y+1),refcolor));
+      f.push(make_pair(make_pair(x,y-1),refcolor));
+  }
+  HCImage<T> * maskImage = create(b,width(),height());
+  return maskImage;
+}\end{lstlisting}
+\caption{Zdrojový kód funkcie HCImage<T>::getAdaptiveFloodFillSelectionMask()}
+\label{fig:getAdaptiveFloodFillSelectionMask}
+\end{figure}
 
 \section{Získanie obrazu z~webkamery}
 Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v~našej aplikácii. Program je šírený pod GNU GPL licenciou.
@@ -200,7 +236,7 @@ Označíme si dĺžku strany štvorca $k$.
 Triviálny algoritmus rozpitia - pre každý pixel vyrobíme okolo neho čierny štvorček - je časovo náročný - má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
 Efektívny algoritmus rozpitia treba robiť v~2 krokoch. Najskôr sa rozpije v~$X$-ovom smere a potom v~$Y$-ovom.
 
-Algoritmus pre $X$-ový smer funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
+Algoritmus pre $X$-ový smer (Obr. \ref{fig:expandPixelsX}) funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
 Na začiatku je to 0. Pozeráme sa vždy o~$\frac{k}{2}$ pixlov ďalej ako kreslíme.
 Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ asi $5\times$ rýchlejší.  
 
@@ -208,12 +244,90 @@ Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na ni
 
 Pre $Y$-ový smer je to analogické. 
 
+\begin{figure}[htp]
+\begin{lstlisting}
+void ImageProcessor::expandPixelsX(int sy, int ex, int ey, GrayScaleImage * imgIn, GrayScaleImage * imgOut)
+{
+  int sx = 0;
+  for(int y = sy;y<ey;y++)
+  {
+    int endblack = 0;
+    for(int x = sx;x<sx+PIXEL_RADIUS && x<ex;x++)
+    {
+      uchar c = imgIn->pixel(x,y);
+      if(c!=WHITE)
+      {
+        endblack = x+PIXEL_RADIUS;
+      }
+    }
+    for(int x = sx;x<ex;x++)
+    {
+      int xx = x+PIXEL_RADIUS;
+      if(xx<ex)
+      {
+        uchar c = imgIn->pixel(xx,y);
+        if(c!=WHITE)
+        {
+          endblack = xx+PIXEL_RADIUS;
+        }
+      }
+      if(x<endblack)
+      {
+         imgOut->setPixel(x,y,0);
+      }
+      else
+      {
+         imgOut->setPixel(x,y,0xFF);
+      }
+    }
+  }
+}
+\end{lstlisting}
+\caption{Zdrojový kód funkcie ImageProcessor::expandPixelsX()}
+\label{fig:expandPixelsX}
+\end{figure}
+
 \subsubsection{Krok 3: Segmentácia}
 Ako sme už spomenuli v~kapitole \ref{chap:segment}, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
 
 Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
 
 Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možné vhodne rozdeliť.
+
+\begin{figure}[htp]
+\begin{lstlisting}
+QRect ImageProcessor::segment(unsigned sx, unsigned sy, uchar color, GrayScaleImage * image, QRect rect)
+{
+  queue<pair<unsigned,unsigned> > f;
+  f.push(make_pair(sx,sy));
+  while(!f.empty())
+  {
+      unsigned x = f.front().first;
+      unsigned y = f.front().second;
+      f.pop();
+      if(x>=image->width()) continue;
+      if(y>=image->height()) continue;
+      if(image->pixel(x,y)!=0) continue;
+      image->setPixel(x,y,color);
+      if((int)x<rect.left()) rect.setLeft(x);
+      if((int)x>rect.right()) rect.setRight(x);
+      if((int)y<rect.top()) rect.setTop(y);
+      if((int)y>rect.bottom()) rect.setBottom(y);
+      f.push(make_pair(x+1,y));
+      if(x>0)
+        f.push(make_pair(x-1,y));
+      f.push(make_pair(x,y+1));
+      if(y>0)
+        f.push(make_pair(x,y-1));
+  }
+  if(rect.height()>(3 *rect.width())/2)
+    rect.setHeight(3*rect.width()/2);
+  return rect;
+}
+\end{lstlisting}
+\caption{Zdrojový kód funkcie ImageProcessor::segment()}
+\label{fig:segment}
+\end{figure}
 
 \section{Rozpoznanie ruky}
 
@@ -227,11 +341,89 @@ Pokiaľ sme v aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti
 
 \subsection{GestureRecognizer}
 
-\todo
+Trieda umožňuje pridávať gestá, pridávať body do gesta, resetovať gesto, zistiť ktoré z pridaných gest zodpovedá postupnosti a vymazať šum z postupnosti gesta.
+
+Zistenie gesta prebieha tak, že sa postupne postupnosť predloží každému rozpoznávaču až kým ho niektorý z nich nerozpozná (Obr. \ref{fig:getGesture}).
+
+Odstránenie šumu odstráni body, ktoré sú príliš ďaleko od predošlého bodu (Obr. \ref{fig:removeNoise}). 
+
+\subsubsection{Dôležité metódy}
+\begin{itemize}
+\item \method{void addGesture(Gesture * g)}
+\\Pridá gesto do zoznamu rozpoznávaných gest.
+\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
+%\\ \underline{Výstup:} \textit{void}
+\item \method{void addPoint(QPoint p)}
+\\Pridá bod do postupnosti
+\\ \underline{Vstup:} \textit{p} - bod
+%\\ \underline{Výstup:} \textit{void}
+\item \method{void resetGesture()}
+\\Zmaže všetky body z postupnosti
+%\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
+%\\ \underline{Výstup:} \textit{void}
+\item \method{void removeNoise()}
+\\Zmaže body, ktoré sa vychyľujú od ostatných
+%\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
+%\\ \underline{Výstup:} \textit{void}
+\item \method{Gesture * getGesture()}
+\\Vráti pointer na rozpoznávač gesta, ktorý rozpoznal dané gesto
+%\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
+\\ \underline{Výstup:} Pointer na rozpoznávač gesta, alebo \textit{NULL}, ak nebolo rozpoznané žiadne gesto.
+\end{itemize}
+
+\begin{figure}[htp]
+\begin{lstlisting}
+Gesture * GestureRecognizer::getGesture()
+{
+  removeNoise();
+  for(vector<Gesture *>::iterator it =  gestures.begin();it !=gestures.end();it++)
+  {
+    if((*it)->check(points)) return (*it);
+  }
+  return NULL;
+}
+\end{lstlisting}
+\caption{Zdrojový kód funkcie GestureRecognizer::getGesture()}
+\label{fig:getGesture}
+\end{figure}
+
+\begin{figure}[htp]
+\begin{lstlisting}
+void GestureRecognizer::removeNoise()
+{  
+  if(points.size()<3) return;
+  unsigned f = 1, a = 1;
+  while(f<points.size() && a<points.size())
+  {
+    if(point_subtract(points[f-1],points[a])<MAX_POINT_DISTANCE)
+    {
+      points[f] = points[a];
+      f++;
+    }
+    a++;
+  }
+  points.resize(f);
+}
+\end{lstlisting}
+\caption{Zdrojový kód funkcie GestureRecognizer::removeNoise()}
+\label{fig:removeNoise}
+\end{figure}
+
 
 \subsection{Gesture}
 
-\todo
+\subsubsection{Dôležité metódy}
+\begin{itemize}
+\item \method{bool check(vector<QPoint>)}
+\\Zistí či daná postupnosť bodov zodpovedá gestu.
+\\ \underline{Vstup:} vector bodov.
+\\ \underline{Výstup:} \textit{true} ak postupnosť zodpovedá gestu, ináč \textit{false}
+\item \method{void action()}
+\\Vykoná akciu gesta(simulácia klávesy)
+%\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
+%\\ \underline{Výstup:} \textit{void}
+\end{itemize}
+
 
 \section{Simulácia stlačenia kláves}
 Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
