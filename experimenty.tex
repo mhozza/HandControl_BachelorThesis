@@ -36,7 +36,7 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \hline
 \textbf{Sada} & \textbf{ruky} & \textbf{ostatné} & \textbf{ruky} & \textbf{ostatné} \\ \hline
 1. sada & 168 & 478 & 245  & 568 \\ \hline
-2. sada & & & & \\ 
+2. sada & & & 149 & 165 \\ 
 \hline
 \end{tabular}
 \caption{Veľkosti sád vstupov}
@@ -183,7 +183,7 @@ Pre porovnanie fourierovej transformácie a rozdielových obrázkov sme použili
 \textbf{Obrázok(11)} & 65,06\% & 0,096 & 70,76 & 0.0887 \\ \hline
 \textbf{Fourierova tr.(11)} & 67,37 & 0,1038 & 99,56 & 0,0023 \\ \hline
 \end{tabular}
-\caption{Porovnanie úspešnosti NS pri rôznych dátach}
+\caption{Porovnanie úspešnosti NS na dátach Fourierovej tr. a rozdielového obrázku}
 \label{tab:neuraldataftcmp}
 \end{table}
 
@@ -194,25 +194,30 @@ Fourierova transformácia dáva potenciál zdvihnúť úspešnosť pri väčšom
 
 \todo 
 
+\begin{table}[h]
+\catcode`\-=12 %kvoli babelu a pomlcke
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\cline{2-5}
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}} & \multicolumn{1}{l}{}\\ 
+\hline
+\textbf{Typ dát} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{úspešnosť} & \textbf{chyba} & \textbf{čas} \\ \hline
+%\textbf{Rozdielový obr.} & 83,33\% & 0,0745 & & & \\ \hline
+%\textbf{Pôvodný obr.} & 68,52\% & 0,1174& & &\\ \hline
+%\textbf{Rozdielový -- FT} & 75,18\%& 0,0895& & &\\ \hline
+%\textbf{Pôvodný -- FT} & 70.37\%& 0,1158& & &\\
+%\hline
+\end{tabular}
+\caption{Porovnanie úspešnosti NS na dátach rozdielového obrázku, pôvodného obrázku a ich Fourierovych transformácií}
+\label{tab:neuraldatacmp}
+\end{table}
+
+
+
 \subsection{Zhrnutie}
 
+
 \todo 
-%Nevýhodou rozdielového obrázka je, že zmena spôsobená pohybom sa v ňom vyskytne dvakrát. Raz na mieste, kam sa objekt posunul a raz na mieste odkiaľ sa posunul. Toto sme chceli eliminovať tak, že sa vyberie ruka z pôvodného obrázka podľa farby. Táto ruka tam bude vždy len raz. Bohužiaľ tento prístup mal viac zlých vlastností ako dobrých.
-
-%Pri vyberaní obrázka treba mať nastavené správne parametre, podľa ktorých sa rozhoduje čo pridať do výberu a čo nie. Tieto parametre veľmi závisia od osvetlenia. Navyše osvetlenie sa môže meniť pri pohybe ruky, čo veľmi stažuje nastavenie správnych parametrov. Pred použitím aplikácie by sa aplikácia musela nakalibrovať, čo znižuje komfort jej použitia.
-
-%Ďalší problém je správne tipnúť bod, ktorý patrí ruke, aby sa z neho mohla odštartovať selekcia. Pokiaľ by bola v danom obdĺžniku len dlaň, tak nie je až také ťažké sa správne trafiť - je takmer isté, že kúsok pod stredom obrázka bude dlaň. Bohužiaľ často sa stane, že užívaťeľ pohne nielen rukou, ale aj predlaktím a segmentačný algoritmus zaradí do segmentu aj predlaktie. Potom sa môže stať, že bod ruky netrafíme.
-
-%{\color{red}
-%Rozhodujúcim problémom však bolo to, že úspešnosť siete na dátach, ktoré ani neobsahovali zle vybraté ruky bola aj tak nižšia ako u rozdielového obrázka (tabuľka \ref{tab:neuraldatacmp}). Preto sme sa rozhodli radšej pridať ďalšie dáta do trénovacej množiny pre rozdielové obrázky. Pri vyhodnocovaní tejto časti sme použili menšiu trénovaciu a testovaciu sadu, ktorá obsahovala cca 350 trénovacích a 300 testovacích vzorov. Sada neobsahovala zle vybraté ruky.
-%}
-
-%\subsection{Fourierova transformácia} \label{sect:ft}
-%Fourierova transformácia zvykne často pomáhať, keď sa použie na predspracovanie dát pri trénovaní obrazových alebo zvukových vzoriek. Preto sme sa aj my rozhodli vyskúšať aký bude mať vplyv na úspešnosť.
-
-%Fourierova transformácia bola použitá na segment ako celok, potom bola prevedená do reálnych čísel ako absolútna hodnota z komplexného čísla a následne normalizovaná.
-
-%Konvergencia chyby pri trénovaní bola značne rýchlejšia a použitie transformácie umožnilo dosiahnuť menšiu chybu na trénovacej množine. 
 
 %TODO
 %Úspešnosť na testovacej množine bola mierne nižšia.
