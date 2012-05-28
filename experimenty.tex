@@ -43,6 +43,8 @@ Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. ro
 \label{tab:neuroncountcmp}
 \end{table}
 
+\todo doplnit tabulku
+
 Keďže obrázkov rúk je v dátach menej ako ostatných a sieť, ktorá by na všetko povedala že to ruka nie je by mala úspešnosť $>60\%$, percentuálnu úspešnosť počítame ako \textbf{priemer percentuálnej úspešnosti} na rukách a na ostatných obrázkoch.
 
 \section{Porovnanie architektúr neurónových sietí}
@@ -166,7 +168,27 @@ Vylepšeniami architektúry sa nám podarilo zdvihnúť úspešnosť o \textbf{2
 
 \subsection{Fourierova transformácia}
 
-\todo 
+Pre porovnanie fourierovej transformácie a rozdielových obrázkov sme použili 3-vrstvovú upravenú neurónovú sieť. Vybrali sme ju pre to, že 2-vrstvovú sa nám nepodarilo natrénovať. Ani pri tejto architektúre sa nám však nedarili sieť natrénovať na úspešnosť viac ako 71\%. Už z toho je vidieť výhoda fourierovej transformácie. Počty neurónov sme vybrali tie, ktoré dopadli v predošlom teste najlepšie (tabuľka \ref{tab:neuroncountcmp2}) -- [7; 112(7)] a [7; 176(11)].
+
+\begin{table}[htp]
+\catcode`\-=12 %kvoli babelu a pomlcke
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\cline{2-5}
+\multicolumn{1}{l}{} & \multicolumn{2}{|c|}{\textbf{Testovacia množina}} & \multicolumn{2}{c|}{\textbf{Trénovacia množina}}\\ 
+\hline
+\textbf{Typ dát} & \textbf{úspešnosť}(\%) & \textbf{chyba} & \textbf{úspešnosť}(\%) & \textbf{chyba}\\ \hline
+\textbf{Obrázok(7)} & 65,16\% & 0,1052 & 70,71 & 0.0864 \\ \hline
+\textbf{Fourierova tr.(7)} & 67,05 & 0,1042 & 99,21 & 0,0053 \\ \hline 
+\textbf{Obrázok(11)} & 65,06\% & 0,096 & 70,76 & 0.0887 \\ \hline
+\textbf{Fourierova tr.(11)} & 67,37 & 0,1038 & 99,56 & 0,0023 \\ \hline
+\end{tabular}
+\caption{Porovnanie úspešnosti NS pri rôznych dátach}
+\label{tab:neuraldataftcmp}
+\end{table}
+
+Z tabuľky \ref{tab:neuraldataftcmp} je vidieť zlepšenie o 2\% pri použití Fourierovej transformácie. Okrem toho nám
+Fourierova transformácia dáva potenciál zdvihnúť úspešnosť pri väčšom množstve trénovacích dát a širšie možnosti trénovania. 
 
 \subsection{Rozdielový vs. pôvodný obraz}
 
