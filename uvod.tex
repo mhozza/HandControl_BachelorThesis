@@ -2,23 +2,18 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Úvod}
 \chapter*{Úvod}\label{chap:intro}
-{\color{red}
 Notebooky sú často využívané na prezentácie, či už na nejakej prednáške, alebo prezentácie fotiek. Pri prezentovaní sa často využíva diaľkový ovládač, aby prezentujúci nemusel sedieť pri počítači alebo k~nemu stále chodiť.
 
-V~dnešnej dobe väčšina notebookov obsahuje web-kameru, takže vzniká otázka, či sa nedá kamera využiť na elimináciu potreby ovládača. Počítač by sa mohol ovládať pomocou pohybu ruky, ktorý by sa snímal web-kamerou.
+V~dnešnej dobe väčšina notebookov obsahuje webovú kameru, takže vzniká otázka, či sa nedá kamera využiť na elimináciu potreby ovládača. Počítač by sa mohol ovládať pomocou pohybu ruky, ktorý by sa snímal webkamerou.
 
-V~tejto práci sa budem zaoberať 2 prístupmi k~rozpoznávaniu a budem porovnávať ich úspešnosť. Prvým z~nich je oddelený prístup, kde budem zvlášť rozpoznávať ruku pomocou doprednej neurónovej siete a zvlášť gestá nakreslené touto rukou.
-V~druhom budem rozpoznávať gesto z~postupnosti obrazov pomocou rekurentnej neurónovej siete. Okrem toho sa budem venovať predspracovaniu obrazu rôznymi metódami tak, aby som zlepšil kvalitu rozpoznávania.
+V čase, keď vznikol nápad písať túto prácu\footnote{v roku 2010} sa takéto riešenia v praxi nevyužívali, hoci niečim podobným sa už zaoberali viacerí. Nenašli sme však žiadne dokončené riešenia, ktoré by boli voľne prístupné.
 
-Výsledný produkt sa bude dať použiť na transformáciu gest na klávesové skratky a tým na ovládanie prezentačnej aplikácie.
-}
+Ešte pred dokončením tejto práce bol uvedený na trh inteligentný televízor, ktorý bolo možné ovládať kombináciou hlasu a pohybu ruky, čo ukazuje, že táto myšlienka nie je zlá. 
 
-% \section{Motivácia}
-% 
-% Motiváciou mojej práce bolo spraviť produkt, ktorý umožní vzdialené ovládanie počítača, bez pomoci ovládača, alebo iného externého zariadenia. Produkt by bol použiteľný napríklad pri prezentáciach.
-% 
-% \section{Ciele}
-% 
-% Cieľom práce je pomocou počítačových neurónových sietí rozpoznávať jednoduché dynamické gestá prezentované rukou a zaznamenané webovou kamerou. Porovnať dva prístupy k rozpoznávaniu: cez doprednú a rekurentnú neurónovú sieť. 
-% Realizovaný rozpoznávač prepojiť na ovládanie aplikácií.
-% 
+Narozdiel od použitia v televízore, kde sa ruka používala na ovládanie kurzora myši, my budeme pohyby ruky interpretovať ako gestá a následne prekladať na príkazy počítaču - pomocou simulácie stlačení kláves.
+
+Práca je zameraná na problém rozpoznania pohybujúcej sa ruky v obraze, ktorý je získaný z webkamery. Rozpoznávanie realizujeme pomocou neurónových sietí. Popíšeme si návrh architektúry siete a rôzne spôsoby predspracovania dát, aby sme dosiahli čo najlepšiu úspešnosť rozpoznávania. Ukážeme si, aké prístupy môžu pomôcť a čo sa stane ak do siete pridáme rekurentné spojenia. 
+
+Nakoniec si popíšeme implementáciu aplikácie, ktorá bude rozpoznávať jednoduché gestá ruky a umožňovať nimi ovládať iné aplikácie.
+
+Výsledný produkt sa bude dať použiť na ovládanie napríklad prezentačnej aplikácie alebo prehliadača fotiek, či prehrávača videa.
