@@ -192,7 +192,7 @@ Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Fu
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
-Na začiatku je pôvodný obrázok celý čierny a v~rozdieli toho bude veľa. To nám však nevadí. \todo
+Na začiatku je pôvodný obrázok celý čierny a v prvom rozdieli toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V prípade zlého vyhodnotenia ale 1 obrázok stále nestačí na gesto.
 
 \subsubsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
@@ -217,11 +217,20 @@ Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možn
 
 \section{Rozpoznanie ruky}
 
-Rozpoznanie ruky má nastarosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach - každé vlákno spracováva len jeden segment.
+Rozpoznanie ruky má na starosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach - každé vlákno spracováva len jeden segment.
 Trieda \textit{HandRecognizer} vyberie z~fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
-\todo
+
+Na vystrihnutý obrázok sa aplikuje fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 
 
 \section{Rozpoznanie gesta}
+Pokiaľ sme v aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti a skontrolujeme, či postupnosť netvorí nejaké gesto. Pre každé gesto máme jednoduchú triedu, ktorá ho rozpoznáva. Každá takáto trieda dedí od triedy \textit{Gesture}. Správu gest zastrešuje trieda \textit{GestureRecognizer}
+
+\subsection{GestureRecognizer}
+
+\todo
+
+\subsection{Gesture}
+
 \todo
 
 \section{Simulácia stlačenia kláves}
