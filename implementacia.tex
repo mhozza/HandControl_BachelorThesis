@@ -3,7 +3,7 @@
 
 V~tejto kapitole predstavíme triedy a popíšeme implementačné detaily jednotlivých častí algoritmu.
 
-Budeme sa venovať základným triedam, riešeniam elementárnych vecí, detailom spacovania obrazu, rozpoznávaniu ruky a gesta. Podrobne si popíšeme implementáciu neurónových sietí.
+Budeme sa venovať základným triedam, riešeniam elementárnych vecí, detailom spracovania obrazu, rozpoznávaniu ruky a gesta. Podrobne si popíšeme implementáciu neurónových sietí.
 
 Spomenieme aj niektoré problémy a ich riešenia a možnosti paralelizácie.
 
@@ -26,31 +26,22 @@ Ku každej z~týchto úrovní máme všeobecnú triedu a rôzne implementácie. 
 \label{sect:perceptron}
 \textit{Perceptron} je abstraktná trieda, ktorá zovšeobecňuje rôzne typy perceptrónov, ktoré sa líšia rôznymi aktivačnými funkciami.
 
-Obsahuje trénovací algoritmus pre perceptróny
-%(metóda \method{void train(vector<float> input,int target)} )
-, ale aj podporu algoritmu \textit{backpropagation} 
-%(metóda \method{ void trainDelta(vector<float> input, float delta)} )
-a klasifikačný algoritmus 
-%(metóda \method{ float classify(vector<float> input)} )
-. Okrem toho obsahuje užitočné funkcie na randomizáciu váh, ukladanie a načítanie váh.
+Obsahuje trénovací algoritmus pre perceptróny, ale aj podporu algoritmu \textit{backpropagation} a klasifikačný algoritmus. Okrem toho obsahuje užitočné funkcie na randomizáciu váh, ukladanie a načítanie váh.
 
-Perceptron pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}
-%TODO referenciu?
-, takže ho nie je nutné pridávať k~vstupu.
+\textit{Perceptron} pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}\footnote{kapitola \ref{chap:perceptron}}, takže ho nie je nutné pridávať k~vstupu.
 
 Možnosť vytvorenia rôznych typov perceptrónov zabezpečujú abstraktné metódy 
 \begin{itemize}
 \item \method{float activationFunction(const vector<float>* input)},
 \item \method{float derivativeFunction(float x)},
 \end{itemize}
-ktoré treba definovať.
+ktoré treba v~potomkovi definovať.
 
 \subsubsection{Dôležité metódy}
 \begin{itemize}
 \item \method{void train(vector<float> input,int target)}
 \\Jednoduché trénovanie perceptrónov.
 \\ \underline{Vstup:} \textit{input} - vstup siete, \textit{target} - požadovaný výstup 
-%\\ \underline{Výstup:} \textit{void}
 \item \method{ void trainDelta(vector<float> input, float delta)}
 \\Delta trénovanie pre \textit{backpropagation} algoritmus.
 \\ \underline{Vstup:} \textit{input} - vstup siete, \textit{delta} $=\delta$ z~učiaceho pravidla: $\Delta w_i = \alpha\delta x_i$\footnote{používame mierne inú notáciu ako je v~\cite{haykin1999neural}} \cite[s. 74]{haykin1999neural}
@@ -62,7 +53,7 @@ ktoré treba definovať.
 \item \method{void prepare(vector<float>* input);}
 \\Predpríprava vstupu pre spracovanie v~perceptróne - pridáva \textit{bias}.
 
-Túto metódu treba volať tam, kde metóda dostáva užívateľský vstup - bez \textit{biasu}.
+Túto metódu treba volať tam, kde metóda dostáva užívateľský vstup (bez \textit{biasu}).
 \\ \underline{Vstup:} \textit{*input} - pointer vstup siete
 \\ \underline{Výstup:} metóda upraví priamo vektor, ktorý jej bol daný ako vstup.
 \end{itemize}
@@ -104,7 +95,7 @@ Trieda \textit{DistributedNeuralLayer} dedí od triedy \textit{NeuralLayer}. Pos
 Okrem konštruktora bolo v~tomto prípade nutné upraviť aj metódy \method{float train(vector<float>,vector<int>)} a \method{vector<float> classify(vector<float>)}, tak, aby trénovanie a klasifikácia prebiehala na príslušnej časti vstupu.
 
 \subsection{RecurrentLayer}
-Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožnujú update a reset rekurentného vstupu neurónov.
+Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožňujú update a reset rekurentného vstupu neurónov.
 
 \subsection{DistributedRecurrentLayer}
 Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer} a \textit{DistributedRecurrentLayer}. Tu sa ukazuje sila nášho objektovo orientovaného modelu ako aj sila viacnásobného dedenia v~C++. Táto trieda obsahuje len konštruktor, ktorý volá konštruktory rodičovských tried. Prakticky bez námahy vieme takto vytvoriť nový typ siete spojením dvoch existujúcich.
@@ -149,15 +140,15 @@ Pre účely aplikácie potrebujeme špecifickú triedu na obrázky, ktorá spĺ�
 \item Maskovanie
 \item Floodfill
 \end{itemize}
-Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie konverzia do rôznych formátov, ukladanie na disk a~iné.
+Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie, konverziu do rôznych formátov, ukladanie na disk a~iné.
 
-Trieda \textit{HCImage}, je abstraktná trieda ktorá implementuje základné veci, ktoré sú nezávislé na type pixelu. Od tejto triedy potom dedia triedy \textit{GrayScaleImage} a \textit{ColorImage}. Tieto implementujú metódy, ktoré sú závislé na type pixla. 
+Trieda \textit{HCImage}, je abstraktná trieda, ktorá implementuje základné veci, ktoré sú nezávislé na type pixlu. Od tejto triedy potom dedia triedy \textit{GrayScaleImage} a \textit{ColorImage}. Tieto implementujú metódy, ktoré sú závislé na type pixlu (odtiene šedej alebo farebný pixel). 
 
-%V ďalšom texte sa budeme venovať jednotliv
 \subsubsection{Vystrihnutie}
 Na vystrihnutie slúži metóda \method{copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
 
 \subsubsection{Škálovanie}
+\label{chap:scale}
 Metóda \method{scale(unsigned w, unsigned h)} preškáluje obrázok na novú veľkosť - $w\times h$ pixlov.
 
 Využíva bilineárnu interpoláciu -- vypočíta súradnice nového bodu a pomocou susedných bodov z~pôvodného obrázka vypočíta farbu.
@@ -171,11 +162,11 @@ Metóda \method{mask(HCImage *mask, bool invert = false)} aplikuje masku na obr�
 Maskovanie použijeme na odstránenie nepodstatných častí obrázka, aby neovplyvňovali neurónovú sieť. Využívame bitové operátory na urýchlenie výpočtu. %Každý pixel skombinuje s~pixlom masky. 
 
 \subsubsection{Floodfill selekcia}
-Techniku \textit{floodfill selekcie} si môžeme predstaviť ako "čarovnú paličku"\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde \method{getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)} (Obr. \ref{fig:getAdaptiveFloodFillSelectionMask}). Metóda berie nekoľko parametrov - pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
+Techniku \textit{floodfill selekcie} si môžeme predstaviť ako ,,čarovnú paličku''\footnote{známu z~grafických programov ako je GIMP, či Photoshop}, alebo nástroj na selekciu susedných pixlov s~podobnými farbami. Techniku \textit{floodfill} používame na získanie masky v~metóde \method{getAdaptiveFloodFillSelectionMask(int sx, int sy, int treshold, float originalFactor, float changeFactor)} (Obr. \ref{fig:getAdaptiveFloodFillSelectionMask}). Metóda berie nekoľko parametrov -- pozíciu bodu z~ktorého má floodfill začať, hranicu podobnosti farieb, vplyv originálnej farby a zmeny. Referenčná farba sa získa ako priemer začiatočného bodu a jeho okolitých bodov. 
 
 Metóda vráti obrázok, ktorý sa dá použiť ako maska, ktorá odstráni\footnote{začierni} pixle, ktoré neboli vybraté pomocou techniky \textit{floodfill}.
 
-Algortimus funguje ako prehľadávanie do šírky, pričom do susedného pixla pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixla sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixla.
+Algoritmus funguje ako prehľadávanie do šírky, pričom do susedného pixlu pôjde len v~prípade, že ich rozdiel je menší ako hranica. V~prípade farebného obrázka sa tento rozdiel počíta po zložkách a menší musí byť každý z~nich. Pri prejdení do nasledujúceho pixlu sa upraví referenčná farba podľa nasledujúceho vzorca: $refcolor = reference \cdot originalFactor + (refcolor\cdot changeFactor+color \cdot (1-changeFactor)) \cdot (1-originalFactor)$, kde $reference$ je začiatočná referenčná farba, $refcolor$ je aktuálna referenčná farba a $color$ je farba pixlu.
 
 \begin{figure}[htp]
 \begin{lstlisting}
@@ -223,7 +214,7 @@ Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázko
 \subsection{Trieda ImageProcessor}
 Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
-Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
+Spúšťanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
 
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
@@ -233,17 +224,18 @@ Na začiatku je pôvodný obrázok celý čierny a v~prvom rozdieli toho bude ve
 \subsubsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
 
-Triviálny algoritmus rozpitia - pre každý pixel vyrobíme okolo neho čierny štvorček - je časovo náročný - má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
+Triviálny algoritmus rozpitia -- pre každý pixel vyrobíme okolo neho čierny štvorček -- je časovo náročný -- má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
 Efektívny algoritmus rozpitia treba robiť v~2 krokoch. Najskôr sa rozpije v~$X$-ovom smere a potom v~$Y$-ovom.
 
 Algoritmus pre $X$-ový smer (Obr. \ref{fig:expandPixelsX}) funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
 Na začiatku je to 0. Pozeráme sa vždy o~$\frac{k}{2}$ pixlov ďalej ako kreslíme.
-Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ asi $5\times$ rýchlejší.  
+Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. 
 
 Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne, čo je ďalšou výhodou efektívnejšieho algoritmu.
 
 Pre $Y$-ový smer je to analogické. 
 
+Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ asi $5\times$ rýchlejší.  
 \begin{figure}[htp]
 \begin{lstlisting}
 void ImageProcessor::expandPixelsX(int sy, int ex, int ey, GrayScaleImage * imgIn, GrayScaleImage * imgOut)
@@ -331,10 +323,10 @@ QRect ImageProcessor::segment(unsigned sx, unsigned sy, uchar color, GrayScaleIm
 
 \section{Rozpoznanie ruky}
 
-Rozpoznanie ruky má na starosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach - každé vlákno spracováva len jeden segment.
+Rozpoznanie ruky má na starosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach -- každé vlákno spracováva len jeden segment.
 Trieda \textit{HandRecognizer} vyberie z~fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
 
-Na vystrihnutý obrázok sa aplikuje fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 
+Na vystrihnutý obrázok sa aplikuje Fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 
 
 \section{Rozpoznanie gesta}
 Pokiaľ sme v~aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti a skontrolujeme, či postupnosť netvorí nejaké gesto. Pre každé gesto máme jednoduchú triedu, ktorá ho rozpoznáva. Každá takáto trieda dedí od triedy \textit{Gesture}. Správu gest zastrešuje trieda \textit{GestureRecognizer}
@@ -343,7 +335,7 @@ Pokiaľ sme v~aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti
 
 Trieda umožňuje pridávať gestá, pridávať body do gesta, resetovať gesto, zistiť ktoré z~pridaných gest zodpovedá postupnosti a vymazať šum z~postupnosti gesta.
 
-Zistenie gesta prebieha tak, že sa postupne postupnosť predloží každému rozpoznávaču až kým ho niektorý z~nich nerozpozná (Obr. \ref{fig:getGesture}).
+Zistenie gesta prebieha tak, že sa postupne postupnosť predloží každému rozpoznávaču, až kým ho niektorý z~nich nerozpozná (Obr. \ref{fig:getGesture}).
 
 Odstránenie šumu odstráni body, ktoré sú príliš ďaleko od predošlého bodu (Obr. \ref{fig:removeNoise}). 
 
@@ -426,7 +418,7 @@ void GestureRecognizer::removeNoise()
 
 
 \section{Simulácia stlačenia kláves}
-Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožnuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená alebo nie(funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
+Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožňuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená, alebo nie (funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
 
 \section{Pomocné programy}
 
@@ -434,17 +426,17 @@ Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá ná
 \label{chap:saveimageapp}
 Upravená verzia aplikácie je kópiou aplikácie, ktorá umožňuje jednoduché ukladanie dát na disk.
 
-Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
+Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta Fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
 
 \subsubsection{CreateFFT}
 
-\textit{CreateFFT} je program, ktorý umožňuje vytvorenie fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory - normalizovanú fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
+\textit{CreateFFT} je program, ktorý umožňuje vytvorenie Fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory -- normalizovanú Fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
 
 \textbf{Použitie:} {\tt ./CreateFFT image.ppm}
 
 \subsubsection{NeuralNet}
 %\label{chap:neuralnetapp}
-\textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
+\textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete ako hlavná aplikácia. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
 
 Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
 
@@ -452,19 +444,18 @@ Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z~ktorého s
 
 \textbf{Použitie:} {\tt ./NeuralNet architektura pocet\_epoch vypisy typ\_dat cesta\_ruky cesta\_ostatne vahy\_vstup vahy\_vystup}
 \begin{itemize}
-\item \underline{architektura} \textit{n} - dopredná, \textit{r} - rekurentná, \textit{c} - z~konzoly
+\item \underline{architektura} \textit{n} -- dopredná, \textit{r} -- rekurentná, \textit{c} -- z~konzoly
 \item \underline{pocet\_epoch} - počet epoch alebo 0 pre testovanie
 \item \underline{vypisy} - miera výpisov do konzoly
-\item \underline{typ\_dat} - \textit{0} - fourierove transformácie, \textit{1} - obrázky s~čiernym pozadím, \textit{3} - obrázky s~bielym pozadím
+\item \underline{typ\_dat} - \textit{0} -- fourierove transformácie, \textit{1} -- obrázky s~čiernym pozadím, \textit{3} - obrázky s~bielym pozadím
 \item \underline{cesta\_ruky} - cesta k~dátam rúk
 \item \underline{cesta\_ostatne} - cesta k~ostatným dátam
 \item \underline{vahy\_vstup} - súbor z~ktorého sa načítajú váhy
 \item \underline{vahy\_vystup} - súbor do ktorého sa uložia váhy
 \end{itemize}
 
-\subsubsection{Skripty}
-Pre zjednodušenie práce sme si napísali rôzne skripty na jednoduché spúštanie trénovania, testovania a na rozdelovanie vstupov do príslušných adresárov.
-\todo
+%\subsubsection{Skripty}
+%Pre zjednodušenie práce sme si napísali rôzne skripty na jednoduché spúštanie trénovania, testovania a na rozdelovanie vstupov do príslušných adresárov.
 
 \section{Problémy a ich riešenia}
 \todo
