@@ -116,7 +116,7 @@ Trieda \textit{NeuralNetwork} zoskupuje vrstvy do viacvrstvovej siete. Implement
 
 Poskytuje implementáciu \textit{backpropagation} algoritmu, ukladanie a načítanie váh do/zo súboru. 
 
-Dediace triedy väčšinou mierne menia architektúru napríklad použitím iného typu vrstvy. Tieto zmeny sa zvyknú robiť v konštruktore.
+Dediace triedy väčšinou mierne menia architektúru napríklad použitím iného typu vrstvy. Tieto zmeny sa zvyknú robiť v~konštruktore.
 
 \subsubsection{Dôležité metódy}
 \begin{itemize}
@@ -131,13 +131,13 @@ Dediace triedy väčšinou mierne menia architektúru napríklad použitím iné
 \end{itemize}
 
 \subsection{DistributedNeuralNetwork}
-Trieda \textit{DistributedNeuralNetwork} dedí z \textit{NeuralNetwork}. Jedinou zmenou je, že ako spodnú vrstvu používa \textit{DistributedNeuralLayer}.
+Trieda \textit{DistributedNeuralNetwork} dedí z~\textit{NeuralNetwork}. Jedinou zmenou je, že ako spodnú vrstvu používa \textit{DistributedNeuralLayer}.
 
 \subsection{RecurrentNetwork}
 Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. Ako spodnú vrstvu používa \textit{RecurrentLayer}. Okrem toho implementuje metódy \method{update()} a \method{reset()}, ktoré updatujú a resetujú rekurentnú vrstvu.
 
 \subsection{DistributedRecurrentNetwork}
-Trieda \textit{DistributedRecurrentNetwork} dedí z \textit{RecurrentNetwork}. Ako spodnú vrstvu používa \textit{DistributedRecurrentLayer}.
+Trieda \textit{DistributedRecurrentNetwork} dedí z~\textit{RecurrentNetwork}. Ako spodnú vrstvu používa \textit{DistributedRecurrentLayer}.
 
 \section{Triedy pre obrázky}
 
@@ -228,7 +228,7 @@ Spúštanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Fu
 \subsubsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
-Na začiatku je pôvodný obrázok celý čierny a v prvom rozdieli toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V prípade zlého vyhodnotenia ale 1 obrázok stále nestačí na gesto.
+Na začiatku je pôvodný obrázok celý čierny a v~prvom rozdieli toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V~prípade zlého vyhodnotenia ale 1 obrázok stále nestačí na gesto.
 
 \subsubsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
@@ -337,13 +337,13 @@ Trieda \textit{HandRecognizer} vyberie z~fronty obdĺžnik čakajúci na spracov
 Na vystrihnutý obrázok sa aplikuje fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 
 
 \section{Rozpoznanie gesta}
-Pokiaľ sme v aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti a skontrolujeme, či postupnosť netvorí nejaké gesto. Pre každé gesto máme jednoduchú triedu, ktorá ho rozpoznáva. Každá takáto trieda dedí od triedy \textit{Gesture}. Správu gest zastrešuje trieda \textit{GestureRecognizer}
+Pokiaľ sme v~aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti a skontrolujeme, či postupnosť netvorí nejaké gesto. Pre každé gesto máme jednoduchú triedu, ktorá ho rozpoznáva. Každá takáto trieda dedí od triedy \textit{Gesture}. Správu gest zastrešuje trieda \textit{GestureRecognizer}
 
 \subsection{GestureRecognizer}
 
-Trieda umožňuje pridávať gestá, pridávať body do gesta, resetovať gesto, zistiť ktoré z pridaných gest zodpovedá postupnosti a vymazať šum z postupnosti gesta.
+Trieda umožňuje pridávať gestá, pridávať body do gesta, resetovať gesto, zistiť ktoré z~pridaných gest zodpovedá postupnosti a vymazať šum z~postupnosti gesta.
 
-Zistenie gesta prebieha tak, že sa postupne postupnosť predloží každému rozpoznávaču až kým ho niektorý z nich nerozpozná (Obr. \ref{fig:getGesture}).
+Zistenie gesta prebieha tak, že sa postupne postupnosť predloží každému rozpoznávaču až kým ho niektorý z~nich nerozpozná (Obr. \ref{fig:getGesture}).
 
 Odstránenie šumu odstráni body, ktoré sú príliš ďaleko od predošlého bodu (Obr. \ref{fig:removeNoise}). 
 
@@ -358,7 +358,7 @@ Odstránenie šumu odstráni body, ktoré sú príliš ďaleko od predošlého b
 \\ \underline{Vstup:} \textit{p} - bod
 %\\ \underline{Výstup:} \textit{void}
 \item \method{void resetGesture()}
-\\Zmaže všetky body z postupnosti
+\\Zmaže všetky body z~postupnosti
 %\\ \underline{Vstup:} \textit{g} - pointer na rozpoznávač gesta
 %\\ \underline{Výstup:} \textit{void}
 \item \method{void removeNoise()}
@@ -448,17 +448,17 @@ Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia
 
 Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
 
-Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z ktorého sa získa informácia do ktorej postupnosti a framu prvok patrí.
+Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z~ktorého sa získa informácia do ktorej postupnosti a framu prvok patrí.
 
 \textbf{Použitie:} {\tt ./NeuralNet architektura pocet\_epoch vypisy typ\_dat cesta\_ruky cesta\_ostatne vahy\_vstup vahy\_vystup}
 \begin{itemize}
-\item \underline{architektura} \textit{n} - dopredná, \textit{r} - rekurentná, \textit{c} - z konzoly
+\item \underline{architektura} \textit{n} - dopredná, \textit{r} - rekurentná, \textit{c} - z~konzoly
 \item \underline{pocet\_epoch} - počet epoch alebo 0 pre testovanie
 \item \underline{vypisy} - miera výpisov do konzoly
-\item \underline{typ\_dat} - \textit{0} - fourierove transformácie, \textit{1} - obrázky s čiernym pozadím, \textit{3} - obrázky s bielym pozadím
-\item \underline{cesta\_ruky} - cesta k dátam rúk
-\item \underline{cesta\_ostatne} - cesta k ostatným dátam
-\item \underline{vahy\_vstup} - súbor z ktorého sa načítajú váhy
+\item \underline{typ\_dat} - \textit{0} - fourierove transformácie, \textit{1} - obrázky s~čiernym pozadím, \textit{3} - obrázky s~bielym pozadím
+\item \underline{cesta\_ruky} - cesta k~dátam rúk
+\item \underline{cesta\_ostatne} - cesta k~ostatným dátam
+\item \underline{vahy\_vstup} - súbor z~ktorého sa načítajú váhy
 \item \underline{vahy\_vystup} - súbor do ktorého sa uložia váhy
 \end{itemize}
 
