@@ -3,5 +3,15 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Záver}
 
+V práci sme popísali návrh aplikácie pre ovládanie počítača pomocou gest ruky. Popísali sme si algoritmus rozpoznávania gesta a podrobnejšie sme sa zaoberali jeho jednotlivými časťami. Stručne sme si vysvetlili, čo sú umelé neurónové siete a ako ich použijeme na rozpoznanie ruky v obraze. Zaoberali sme sa aj technickými časťami aplikácie, ako je preklad gesta na stlačenia kláves a získavanie obrazu z webovej kamery.
 
-Tu bude záver. \todo
+Navrhli sme vhodnú architektúru umelej neurónovej siete na rozpoznanie ruky a vyskúšali sme rôzne metódy predspracovania. Porovnali sme úspešnosti jednotlivých prístupov a vybrali sme ti, ktoré sa ukázali byť nápomocné. Nakoniec sme si popísali implementáciu aplikácie a rozobrali sme niektoré problémy, ktoré sa vyskytli pri jej implementácii.
+
+Podarilo sa nám ukázať, že Fourierova transformácia pomáha na zvýšenie úspešnosti, a že rozdielový obraz, ktorý vznikne rozdielom dvoch po sebe idúcich obrázkov a obsahuje obrysy pohybujúcich sa objektov je vhodným zdrojom informácie pre neurónovú sieť. 
+
+Ukázali sme, že umelé neurónové siete sa dajú použiť na úlohu rozpoznávania ruky. Natrénovali sme neurónovú sieť, ktorá má úspešnosť 67,88 \% na testovacej vzorke a otestovali sme aplikáciu v praxi. Aplikácia je v praxi použiteľná, rozpoznávanie gest dosahuje úspešnosť približne 80\%.
+
+Momentálne aplikácia rozpoznáva 4 základné gestá -- pohyb rukou doprava, doľava, hore a dole. Snažili sme sa ju zoptimalizovať a na bežných systémoch funguje plynule a bez problémov. Oproti komerčným riešeniam, ktoré sa dodávajú aj so špecifickým hardvérom má aplikácia nevýhodu v nízkej kvalite obrazu z kamery a to, že kamera je len jedna a obraz je dvojrozmerný -- komerčné riešenia majú často 2 kamery a senzor hĺbky, vďaka čomu majú verný 3D obraz scény. Aj napriek tomu však naša aplikácia funguje v bežných svetelných podmienkach celkom dobre.
+
+Aplikácia poskytuje ešte mnoho priestoru na vylepšenie. Dal by sa použiť napríklad \textit{Kalmanov filter} na zvýšenie presnosti gesta a elimináciu zlých rozhodnutí siete, zlepšiť rozpoznávanie gest a pridať ďalšie, aj komplexnejšie gestá. Rozpoznávanie sa dá napojiť aj na kvalitnejší algoritmus sledovania objektov. V budúcnosti by sme chceli vyskúšať aj použitie \textit{Skrytých Markvovych modelov} namiesto neurónových sietí.
+

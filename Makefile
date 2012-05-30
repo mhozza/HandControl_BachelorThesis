@@ -1,6 +1,6 @@
 default: pdf
 
-main.dvi: *.tex *.bib komlogo-new.eps Makefile images/*.pdf
+main.dvi: *.tex *.bib komlogo-new.eps Makefile images/*
 	rm -f *.toc
 	cslatex main
 	bibtex main
@@ -10,7 +10,7 @@ main.dvi: *.tex *.bib komlogo-new.eps Makefile images/*.pdf
 main.ps: main.dvi
 	dvips main.dvi
 
-main.pdf: *.tex *.bib komlogo-new.pdf Makefile images/*.pdf
+main.pdf: *.tex *.bib komlogo-new.pdf Makefile images/*
 	rm -f *.toc
 	pdfcslatex main
 	bibtex main
