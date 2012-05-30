@@ -35,7 +35,7 @@ Možnosť vytvorenia rôznych typov perceptrónov zabezpečujú abstraktné met�
 \item \method{float activationFunction(const vector<float>* input)},
 \item \method{float derivativeFunction(float x)},
 \end{itemize}
-ktoré treba v potomkovi definovať.
+ktoré treba v~potomkovi definovať.
 
 \subsubsection{Dôležité metódy}
 \begin{itemize}
@@ -461,9 +461,13 @@ Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z~ktorého s
 
 \subsection{Multivláknovosť}
 
+Použitie viacerých vláken prinieslo problémy v~prípade, že viac vláken pristupovalo naraz k~tomu istému zdroju. Problémom bola napríklad fronta, do ktorej sa ukladali segmenty. Jedno vlákno pridávalo do fronty a ostatné vyberali. Takéto problémy sme vyriešili vhodným umiestnením mutexov. Problémy robila aj knižnica \textit{fftw3}, kde alokovanie a uvoľnenie pamäti bolo tiež treba ošetriť mutexami.
+
 \subsection{Viacnásobné dedenie}
 
-\todo
+Pri implementácii neurónových sietí sme sa stretli s~problémom diamantového dedenia, keď  jedna trieda dedí od 2 tried ktoré majú spoločného predka. 
+Spoločného predka sme museli pri dedení označiť ako {\tt virtual} a pretypovávať sme museli pomocou {\tt dynamic\_cast}.
+\eject
 
 \section{Screenshoty aplikácie}
 
