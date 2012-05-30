@@ -20,7 +20,17 @@ Každý z~týchto segmentov sa predloží klasifikátoru, ktorý rozhodne, či d
 \subsection{Rozdielový obraz}
 \label{chap:diffimg}
 
-Základ pre predspracovanie a segmentáciu tvorí takzvaný \textbf{rozdielový obraz}. Rozdielový obraz je obraz, ktorý vznikne odčítaním 2 po sebe idúcich čiernobielych obrázkov v~absolútnej hodnote. Tento obraz obsahuje zmeny - pohybujúce sa objekty. Statické objekty sa tam teda nevyskytnú, čo nám umožní ich veľmi ľahko odfiltrovať. V~tomto obraze sa vyskytnú obrysy pohybujúcich sa objektov, pretože ku zmenám dochádza najviac na hranách. Podľa rýchlosti pohybu môžu byť obrysy hrubšie, alebo tenšie. 
+Základ pre predspracovanie a segmentáciu tvorí takzvaný \textbf{rozdielový obraz} (Obr. \ref{fig:rozdielovy_obr}). Rozdielový obraz je obraz, ktorý vznikne odčítaním 2 po sebe idúcich čiernobielych obrázkov v~absolútnej hodnote. Tento obraz obsahuje zmeny - pohybujúce sa objekty. Statické objekty sa tam teda nevyskytnú, čo nám umožní ich veľmi ľahko odfiltrovať. V~tomto obraze sa vyskytnú obrysy pohybujúcich sa objektov, pretože ku zmenám dochádza najviac na hranách. Podľa rýchlosti pohybu môžu byť obrysy hrubšie, alebo tenšie. 
+
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/rozdielovy}
+  \end{center}
+  \caption{Rozdielový a pôvodný obraz}
+  \label{fig:rozdielovy_obr}
+\end{figure}
+
 
 \subsection{Predspracovanie vstupného obrazu}
 \label{chap:preprocess}
@@ -129,7 +139,7 @@ Naša architektúra rekurentnej neurónovej siete vychádza z~upravenej dopredne
 
 \begin{figure}[htbp]
   \begin{center}
-    \includegraphics[width=0.15\textwidth]{images/recneuron}
+    \includegraphics[width=0.4\textwidth]{images/recneuron}
   \end{center}
   \caption{Rekurentný neurón}
   \label{fig:recurentneuron}
