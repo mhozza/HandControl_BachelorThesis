@@ -209,19 +209,18 @@ Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \
 
 Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z~tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V~prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
-\section{Spracovanie obrazu}
+\section{Spracovanie obrazu - Trieda ImageProcessor}
 \label{chap:imageprocess}
-\subsection{Trieda ImageProcessor}
 Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
 Spúšťanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
 
-\subsubsection{Krok 1: Príprava}
+\subsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
 Na začiatku je pôvodný obrázok celý čierny a v~prvom rozdieli toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V~prípade zlého vyhodnotenia ale 1 obrázok stále nestačí na gesto.
 
-\subsubsection{Krok 2: Algoritmus rozpitia}
+\subsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
 
 Triviálny algoritmus rozpitia -- pre každý pixel vyrobíme okolo neho čierny štvorček -- je časovo náročný -- má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
@@ -279,7 +278,7 @@ void ImageProcessor::expandPixelsX(int sy, int ex, int ey, GrayScaleImage * imgI
 \label{fig:expandPixelsX}
 \end{figure}
 
-\subsubsection{Krok 3: Segmentácia}
+\subsection{Krok 3: Segmentácia}
 Ako sme už spomenuli v~kapitole \ref{chap:segment}, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
 
 Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
