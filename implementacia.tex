@@ -15,20 +15,13 @@ Naša implementácia neurónových sietí kopíruje vrstvový model. Základnou 
 
 Ku každej z~týchto úrovní máme všeobecnú triedu a rôzne implementácie. Na obrázku \ref{fig:nnclsdiag} je class diagram nášho riešenia.
 
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=\textwidth]{images/nn_class_diagram}
-    \caption{Neurónové siete - Class diagram}
-    \label{fig:nnclsdiag}
-\end{figure}
-
 \subsection{Perceptron}
 \label{sect:perceptron}
 \textit{Perceptron} je abstraktná trieda, ktorá zovšeobecňuje rôzne typy perceptrónov, ktoré sa líšia rôznymi aktivačnými funkciami.
 
 Obsahuje trénovací algoritmus pre perceptróny, ale aj podporu algoritmu \textit{backpropagation} a klasifikačný algoritmus. Okrem toho obsahuje užitočné funkcie na randomizáciu váh, ukladanie a načítanie váh.
 
-\textit{Perceptron} pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}\footnote{kapitola \ref{chap:perceptron}}, takže ho nie je nutné pridávať k~vstupu.
+Pri volaní metód, ktoré majú ako parameter vstup siete si perceptrón sám pridá \textit{bias}\footnote{kapitola \ref{chap:perceptron}}, takže ho nie je nutné pridávať k~vstupu.
 
 Možnosť vytvorenia rôznych typov perceptrónov zabezpečujú abstraktné metódy 
 \begin{itemize}
@@ -58,6 +51,15 @@ Túto metódu treba volať tam, kde metóda dostáva užívateľský vstup (bez 
 \\ \underline{Výstup:} metóda upraví priamo vektor, ktorý jej bol daný ako vstup.
 \end{itemize}
 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/nn_class_diagram}
+    \caption{Neurónové siete - Class diagram}
+    \label{fig:nnclsdiag}
+\end{figure}
+
+
 \subsection{ContinuousPerceptron}
 Trieda \textit{ContinuousPerceptron} je implementácia spojitého perceptrónu. Dedí od triedy \textit{Perceptron} 
 Definuje aktivačnú funkciu
@@ -66,7 +68,7 @@ a jej deriváciu
 $$f'(x)=\frac{e^x}{(e^x+1)^2} $$
 
 \subsection{RecurrentPerceptron}
-Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o~rekurentný vstup a metódy na manipulovanie s~ním -- \method{void update()} a \method{void reset()} na update a reset rekurentného vstupu.
+Trieda \textit{RecurrentPerceptron} rozširuje triedu \textit{ContinuousPerceptron} o~rekurentný vstup a metódy na manipulovanie s~ním -- \method{void update()} a \method{void reset()} na aktualizáciu a resetovanie rekurentného vstupu.
 
 \subsection{NeuralLayer}
 \textit{NeuralLayer} je trieda, ktorá zoskupuje spojité perceptróny do vrstvy. Umožňuje trénovanie na viacrozmerné výstupy a podporuje \textit{backpropagation} algoritmus. 
@@ -95,7 +97,7 @@ Trieda \textit{DistributedNeuralLayer} dedí od triedy \textit{NeuralLayer}. Pos
 Okrem konštruktora bolo v~tomto prípade nutné upraviť aj metódy \method{float train(vector<float>,vector<int>)} a \method{vector<float> classify(vector<float>)}, tak, aby trénovanie a klasifikácia prebiehala na príslušnej časti vstupu.
 
 \subsection{RecurrentLayer}
-Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožňujú update a reset rekurentného vstupu neurónov.
+Trieda \textit{RecurrentLayer} dedí od triedy \textit{NeuralLayer}. Namiesto spojitých perceptrónov používa rekurentné. Navyše pridáva metódy \method{void update()} a \method{void reset()}, ktoré umožňujú aktualizáciu a resetovanie rekurentného vstupu neurónov.
 
 \subsection{DistributedRecurrentLayer}
 Trieda \textit{DistributedRecurrentLayer} dedí od triedy \textit{RecurrentLayer} a \textit{DistributedRecurrentLayer}. Tu sa ukazuje sila nášho objektovo orientovaného modelu ako aj sila viacnásobného dedenia v~C++. Táto trieda obsahuje len konštruktor, ktorý volá konštruktory rodičovských tried. Prakticky bez námahy vieme takto vytvoriť nový typ siete spojením dvoch existujúcich.
@@ -125,7 +127,7 @@ Dediace triedy väčšinou mierne menia architektúru napríklad použitím iné
 Trieda \textit{DistributedNeuralNetwork} dedí z~\textit{NeuralNetwork}. Jedinou zmenou je, že ako spodnú vrstvu používa \textit{DistributedNeuralLayer}.
 
 \subsection{RecurrentNetwork}
-Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. Ako spodnú vrstvu používa \textit{RecurrentLayer}. Okrem toho implementuje metódy \method{update()} a \method{reset()}, ktoré updatujú a resetujú rekurentnú vrstvu.
+Trieda \textit{RecurrentNetwork} je potomkom triedy \textit{NeuralNetwork}. Ako spodnú vrstvu používa \textit{RecurrentLayer}. Okrem toho implementuje metódy \method{update()} a \method{reset()}, ktoré aktualizujú a resetujú rekurentnú vrstvu.
 
 \subsection{DistributedRecurrentNetwork}
 Trieda \textit{DistributedRecurrentNetwork} dedí z~\textit{RecurrentNetwork}. Ako spodnú vrstvu používa \textit{DistributedRecurrentLayer}.
@@ -140,9 +142,9 @@ Pre účely aplikácie potrebujeme špecifickú triedu na obrázky, ktorá spĺ�
 \item Maskovanie
 \item Floodfill
 \end{itemize}
-Okrem toho potrebujeme aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie, konverziu do rôznych formátov, ukladanie na disk a~iné.
+Okrem toho potrebujeme, aby obsahovala aj pomocné metódy, ktoré sú potrebné na niektoré algoritmy a testovanie, konverziu do rôznych formátov, ukladanie na disk a~iné.
 
-Trieda \textit{HCImage}, je abstraktná trieda, ktorá implementuje základné veci, ktoré sú nezávislé na type pixlu. Od tejto triedy potom dedia triedy \textit{GrayScaleImage} a \textit{ColorImage}. Tieto implementujú metódy, ktoré sú závislé na type pixlu (odtiene šedej alebo farebný pixel). 
+Trieda \textit{HCImage} je abstraktná trieda, ktorá implementuje základné veci, ktoré sú nezávislé na type pixlu. Od tejto triedy potom dedia triedy \textit{GrayScaleImage} a \textit{ColorImage}. Tieto implementujú metódy, ktoré sú závislé na type pixlu (odtiene šedej alebo farebný pixel). 
 
 \subsubsection{Vystrihnutie}
 Na vystrihnutie slúži metóda \method{copy(QRect r)}, ktorá berie ako parameter obdĺžnik, ktorého obsah potom vráti ako výsledok. 
@@ -205,36 +207,36 @@ HCImage<T>* HCImage<T>::getAdaptiveFloodFillSelectionMask(unsigned sx, unsigned 
 \end{figure}
 
 \section{Získanie obrazu z~webkamery}
-Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \textit{Kapture} \cite{kapture} a ktorú sme upravili pre potreby využitia v~našej aplikácii. Program je šírený pod GNU GPL licenciou.
+Na získanie obrazu z~webkamery používam triedu, ktorá pochádza z~programu \textit{Kapture} \cite{kapture}, a ktorú sme upravili pre potreby využitia v~našej aplikácii. Program je šírený pod GNU GPL licenciou.
 
-Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy keď je buffer pripravený, zobrať pretransformovať obrázok do niektorej z~tried na obrázky. JPEG kóduje farby vo formáte YUV, tieto teda musíme pretransformovať do RGB. V~prípade čiernobieleho obrázka iba zoberieme zložku Y.
+Webkamera vracia obraz vo formáte MJPEG(Motion JPEG), teda postupnosť obrázkov vo formáte JPEG. Úlohou našej triedy je vždy, keď je buffer pripravený,  pretransformovať obrázok do niektorej z~tried na obrázky. JPEG kóduje farby vo formáte YUV, preto ich musíme pretransformovať do RGB. V~prípade čiernobieleho obrázka iba zoberieme zložku Y.
 
 \section{Spracovanie obrazu - Trieda ImageProcessor}
 \label{chap:imageprocess}
-Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavná metóda je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
+Trieda \textit{ImageProcessor} má na starosti predspracovanie obrazu z~webkamery, jeho segmentáciu a posunutie na ďalšie spracovanie triede \textit{HandRecognizer}. \textit{ImageProcessor} využíva vlákna na paralelizáciu úloh a jeho práca je rozdelená do niekoľkých krokov, ktoré nemôžu byť vykonané paralelne. Hlavnou metódou je metóda \method{processImage (const GrayScaleImage \&image, const ColorImage \&colorimg)}, ktorá spravuje vlákna a spúšťa jednotlivé kroky. 
 
-Spúšťanie vláken je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
+Spúšťanie vlákien je realizované pomocou funkcie \method{QtConcurrent::run(Function function, ...)} z~knižnice \textit{Qt}, ktorá umožňuje spustiť funkciu s~danými parametrami v~novom vlákne. Jednotlivé metódy sú upravené tak, aby vedeli upravovať aj len určitú časť obrázka. Spúšťajú sa v~rôznych vláknach s~rôznymi časťami obrázka. %Kritické časti sme ohraničili mutexami.
 
 \subsection{Krok 1: Príprava}
 Príprava spočíva vo vytvorení rozdielového obrázka. Pamätáme si pôvodný obrázok a dostaneme nový. Spočítame rozdiel a zapamätaný obrázok potom nahradíme novým.
 
-Na začiatku je pôvodný obrázok celý čierny a v~prvom rozdieli toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V~prípade zlého vyhodnotenia ale 1 obrázok stále nestačí na gesto.
+Na začiatku je pôvodný obrázok celý čierny a v~prvom rozdiele toho bude veľa, ale je nízka pravdepodobnosť, že to bude zle vyhodnotené. V~prípade zlého vyhodnotenia však 1 obrázok stále nestačí na gesto.
 
 \subsection{Krok 2: Algoritmus rozpitia}
 Označíme si dĺžku strany štvorca $k$.
 
-Triviálny algoritmus rozpitia -- pre každý pixel vyrobíme okolo neho čierny štvorček -- je časovo náročný -- má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší. 
+Triviálny algoritmus rozpitia -- pre každý pixel vyrobíme okolo neho čierny štvorček -- je časovo náročný -- má zložitosť $O(k^2.w.h)$. Preto potrebujeme efektívnejší algoritmus. 
 Efektívny algoritmus rozpitia treba robiť v~2 krokoch. Najskôr sa rozpije v~$X$-ovom smere a potom v~$Y$-ovom.
 
 Algoritmus pre $X$-ový smer (Obr. \ref{fig:expandPixelsX}) funguje nasledovne: Ideme postupne po riadkoch a pre každý riadok si pamätáme pokiaľ máme kresliť čiernu.
 Na začiatku je to 0. Pozeráme sa vždy o~$\frac{k}{2}$ pixlov ďalej ako kreslíme.
-Vždy keď vidíme pixel inej farby ako bielej, tak hranicu pokiaľ máme kresliť čiernu posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernu, inak bielu. 
+Vždy, keď vidíme pixel inej farby ako bielej, tak hranicu -- pokiaľ máme kresliť čiernou -- posunieme na hodnotu o~$k$ väčšiu ako je $y$ súradnica pixla, ktorý kreslíme. Pokiaľ sme pred hranicou, kreslíme čiernou, inak bielou. 
 
-Keďže riadky sa spracovávajú nezávisle, tak sa dá obrázok rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne, čo je ďalšou výhodou efektívnejšieho algoritmu.
+Keďže riadky sa spracovávajú nezávisle, obrázok sa dá rozdeliť na niekoľko častí, ktoré sa dajú spracovať paralelne, čo je ďalšou výhodou efektívnejšieho algoritmu.
 
 Pre $Y$-ový smer je to analogické. 
 
-Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ asi $5\times$ rýchlejší.  
+Tento algoritmus má zložitosť $O(w.h)$ v~praxi pre $k=11$ je asi $5\times$ rýchlejší.  
 \begin{figure}[htp]
 \begin{lstlisting}
 void ImageProcessor::expandPixelsX(int sy, int ex, int ey, GrayScaleImage * imgIn, GrayScaleImage * imgOut)
@@ -281,7 +283,7 @@ void ImageProcessor::expandPixelsX(int sy, int ex, int ey, GrayScaleImage * imgI
 \subsection{Krok 3: Segmentácia}
 Ako sme už spomenuli v~kapitole \ref{chap:segment}, obrázok si reprezentujeme ako graf, na ktorý následne použijeme algoritmus prehľadávania do šírky.
 
-Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým ešte žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
+Algoritmus postupne spustíme z~každého bodu obrázka, ktorý nie je prázdny a zároveň sme ho predtým žiadnym predošlým behom algoritmu nenavštívili. Každý beh nám vráti obdĺžnik, ktorý ak spĺňa veľkostné obmedzenia, tak je vložený do fronty na ďalšie spracovanie. 
 
 Táto časť je realizovaná len jedným vláknom, keďže obrázok nie je možné vhodne rozdeliť.
 
@@ -325,8 +327,8 @@ QRect ImageProcessor::segment(unsigned sx, unsigned sy, uchar color, GrayScaleIm
 Rozpoznanie ruky má na starosti trieda \textit{HandRecognizer}. Beží naraz v~niekoľkých vláknach -- každé vlákno spracováva len jeden segment.
 Trieda \textit{HandRecognizer} vyberie z~fronty obdĺžnik čakajúci na spracovanie. Podľa rozmerov a pozície vystrihne príslušnú časť obrázka.
 
-Na vystrihnutý obrázok sa aplikuje Fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 
-
+Na vystrihnutý obrázok sa aplikuje Fourierova transformácia (kapitola \ref{chap:ft}) a normalizuje sa (kapitola \ref{chap:normalisation}). Výsledok je potom predložený ako vstup neurónovej sieti, ktorá vráti hodnotu $>0,5$ ak to rozpoznala ako ruku, ináč vráti hodnotu $\leq 0,5$. 	
+\eject
 \section{Rozpoznanie gesta}
 Pokiaľ sme v~aktuálnom frame našli ruku, pridáme jej pozíciu do postupnosti a skontrolujeme, či postupnosť netvorí nejaké gesto. Pre každé gesto máme jednoduchú triedu, ktorá ho rozpoznáva. Každá takáto trieda dedí od triedy \textit{Gesture}. Správu gest zastrešuje trieda \textit{GestureRecognizer}
 
@@ -400,7 +402,7 @@ void GestureRecognizer::removeNoise()
 \label{fig:removeNoise}
 \end{figure}
 
-
+\eject
 \subsection{Gesture}
 
 \subsubsection{Dôležité metódy}
@@ -416,8 +418,8 @@ void GestureRecognizer::removeNoise()
 \end{itemize}
 
 
-\section{Simulácia stlačenia kláves}
-Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožňuje simulovať stlačenie klávesy. Do nej vložíme pointer na display, kód klávesy, či je stlačená, alebo nie (funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesy) a aktuálny čas.
+\section{Simulácia stlačenia klávesu}
+Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá nám umožňuje simulovať stlačenie klávesu. Do nej vložíme pointer na display, kód klávesu, či je stlačený, alebo nie (funkciu treba použiť 2x - raz na stlačenie a raz na pustenie klávesu) a aktuálny čas.
 
 \section{Pomocné programy}
 
@@ -425,11 +427,11 @@ Knižnica \textit{Xtst} poskytuje funkciu \method{XTestFakeKeyEvent}, ktorá ná
 \label{chap:saveimageapp}
 Upravená verzia aplikácie je kópiou aplikácie, ktorá umožňuje jednoduché ukladanie dát na disk.
 
-Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia išla takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta Fourierových transformácií\footnote{kapitola \ref{chap:ft} } robili až dodatočne ďalšou aplikáciou.
+Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme, aby aplikácia bežala takmer tak rýchlo ako pôvodná. Zápis na disk je však časovo náročná operácia, preto sme si obrázky ukladali do buffera a zapisovali dávkovo. Zapisovali sme čo najmenšie množstvo dát, preto sme dáta Fourierových transformácií\footnote{kapitola \ref{chap:ft} } vytvárali až dodatočne ďalšou aplikáciou.
 
 \subsubsection{CreateFFT}
 
-\textit{CreateFFT} je program, ktorý umožňuje vytvorenie Fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory -- normalizovanú Fourierovu transformáciu vhodnú pre neurónové siete a obrázok fourierovej transformácie vhodný pre posúdenie človekom.
+\textit{CreateFFT} je program, ktorý umožňuje vytvorenie Fourierovej transformácie z~obrázka. Ako parameter berie cestu k~obrázku a vyrobí 2 súbory -- normalizovanú Fourierovu transformáciu vhodnú pre neurónové siete a obrázok Fourierovej transformácie vhodný pre posúdenie človekom.
 
 \textbf{Použitie:} {\tt ./CreateFFT image.ppm}
 
@@ -437,7 +439,7 @@ Aby sme dostali čo najrealistickejšie obrázky, potrebovali sme aby aplikácia
 %\label{chap:neuralnetapp}
 \textit{NeuralNet} je trénovacia aplikácia pre neurónové siete. Využíva rovnaké triedy pre neurónové siete ako hlavná aplikácia. Obsahuje ľahko upraviteľný algoritmus trénovania a funkcie na jednoduché načítanie dát. 
 
-Dáta máme v~2 oddelených adresároch v~jednom sú dáta zodpovedajúce rukám, a v~druhom ostatné. Programu potom dáme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
+Dáta máme v~2 oddelených adresároch. V~jednom sú dáta zodpovedajúce rukám a v~druhom ostatné. Programu poskytneme tieto adresáre a on si z~nich vyrobí trénovaciu/testovaciu sadu.
 
 Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z~ktorého sa získa informácia do ktorej postupnosti a framu prvok patrí.
 
@@ -446,7 +448,7 @@ Pri rekurentnej neurónovej sieti je dôležitý aj názov súboru, z~ktorého s
 \item \underline{architektura} \textit{n} -- dopredná, \textit{r} -- rekurentná, \textit{c} -- z~konzoly
 \item \underline{pocet\_epoch} - počet epoch alebo 0 pre testovanie
 \item \underline{vypisy} - miera výpisov do konzoly
-\item \underline{typ\_dat} - \textit{0} -- fourierove transformácie, \textit{1} -- obrázky s~čiernym pozadím, \textit{3} - obrázky s~bielym pozadím
+\item \underline{typ\_dat} - \textit{0} -- Fourierove transformácie, \textit{1} -- obrázky s~čiernym pozadím, \textit{3} - obrázky s~bielym pozadím
 \item \underline{cesta\_ruky} - cesta k~dátam rúk
 \item \underline{cesta\_ostatne} - cesta k~ostatným dátam
 \item \underline{vahy\_vstup} - súbor z~ktorého sa načítajú váhy
@@ -466,20 +468,18 @@ Použitie viacerých vláken prinieslo problémy v~prípade, že viac vláken pr
 
 Pri implementácii neurónových sietí sme sa stretli s~problémom diamantového dedenia, keď  jedna trieda dedí od 2 tried ktoré majú spoločného predka. 
 Spoločného predka sme museli pri dedení označiť ako {\tt virtual} a pretypovávať sme museli pomocou {\tt dynamic\_cast}.
-\eject
 
 \section{Screenshoty aplikácie}
 
-
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.55\textwidth]{images/Screenshot_ruka}
+    \includegraphics[width=0.5\textwidth]{images/Screenshot_ruka}
     \caption{Správne rozpoznaná ruka a jej predchádzajúca trajektória }
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.55\textwidth]{images/Screenshot_clovek}
+    \includegraphics[width=0.5\textwidth]{images/Screenshot_clovek}
     \caption{Správne rozpoznaný iný objekt}
 \end{figure}
 

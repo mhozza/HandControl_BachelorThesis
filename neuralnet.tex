@@ -2,7 +2,7 @@
 \chapter{Neurónové siete}
 \label{chap:neuralnet}
 
-Keďže \textit{umelé neurónové siete} sú významnou časťou tejto práce, venujeme im samostatnú kapitolu. Popíšeme, čo sú neurónové siete, ako fungujú a základné typy neurónových sietí, ktoré používame v~aplikácii.
+\textit{Umelé neurónové siete} sú významnou časťou tejto práce, preto im venujeme samostatnú kapitolu. Vysvetlíme, čo sú neurónové siete a ako fungujú. Popíšeme základné typy neurónových sietí, ktoré používame v~aplikácii.
 \bigskip
 
 \section{Jednoduchý spojitý perceptrón}
@@ -29,14 +29,14 @@ Keďže \textit{umelé neurónové siete} sú významnou časťou tejto práce, 
 Jednoduchý perceptrón je inšpirovaný nervovou bunkou - \textit{neurónom}. Vstupy umelého neurónu zodpovedajú \textit{dendridom}, výstup zodpovedá \textit{axónu}. 
 Transformáciu vstupu na výstup zabezpečuje aktivačná funkcia.
 
-Keď si neurón predstavíme ako orientovaný graf (Obr. \ref{fig:neuron}), za vrcholy položíme, vstupy, výstup a ,,telo'' neurónu, vzniknú nám 2 typy hrán.
+Keď si neurón predstavíme ako orientovaný graf (Obr. \ref{fig:neuron}), za vrcholy položíme vstupy, výstup a ,,telo'' neurónu, vzniknú nám 2 typy hrán.
 \begin{enumerate}
 \item Synaptické -- vstup $\rightarrow$ neurón -- lineárna input-output väzba, kde pôvodný signál $x_i$ prenásobíme váhou synapsy $w_i$, a tým dostaneme výsledný signál $x_i'$.
 
 \item Aktivačné -- neurón $\rightarrow$ výstup -- nelineárna input-output väzba, kde $y$ dostaneme dosadením $\sum x_i'$ do aktivačnej funkcie.
 \end{enumerate}
 
-K~vstupom treba pridať ešte jeden vstup -- \textit{bias}, ktorý má vždy hodnotu 1. Jeho význam je pri vstupe so samými nulami, pretože vtedy hodnoty na synapsách ostanú nezmenené a perceptrón by sa tento vzor nevedel naučiť.
+K~daným vstupom treba pridať ešte jeden vstup -- \textit{bias}, ktorý má vždy hodnotu 1. Má význam pri vstupe so samými nulami, v~takomto prípade hodnoty na synapsách ostanú nezmenené a perceptrón by sa tento vzor nevedel naučiť.
 
 Nech $n$ je počet vstupov a  $f$ je aktivačná funkcia. Výsledný signál $y$ dostaneme takto:
 
@@ -45,15 +45,14 @@ $$y= f\left(\sum_{i=1}^{n+1} w_i x_i \right)\qquad x_{n+1}=1$$\medskip
 Aktivačnou funkciou spojitého perceptrónu je sigmoida: 
 
 $$f(x) = \frac{1}{1+e^{-x}}$$\medskip
-%Sigmoida bola vybratá preto, lebo spĺňa vlastnosti, ktoré má mať aktivačná funkcia.
 
 Z~matematického hľadiska robí takýto perceptrón zobrazenie $\mathbb{R}^n\rightarrow (0,1)$.
 
 \section{Jednovrstvová neurónová sieť}
 
-Niekoľko perceptrónov vieme spojiť do jednej vrstvy. Získame tým väčší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach, kde môžme vrstvy pospájať.
+Môžeme spojiť niekoľko perceptrónov do jednej vrstvy. Získame tým väčší rozmer výstupu a teda môžeme vstupy klasifikovať do viacerých tried. Hodí sa to aj pri použití vo viacvrstvových sieťach, kde môžeme vrstvy pospájať.
 
-Neuróny vo vrstve nie sú nijako pospájané a každý teda operuje nezávisle, takže z~praktického hľadiska je to skupina neurónov pracujúcich nad tým istým vstupom.
+Neuróny vo vrstve nie sú nijako pospájané, čo znamená, že každý operuje nezávisle, takže z~praktického hľadiska ide o~skupinu neurónov pracujúcich nad tým istým vstupom.
 
 Vrstva robí zobrazenie $\mathbb{R}^n\rightarrow (0,1)^m$, kde $n$ je rozmer vstupu a $m$ je počet neurónov vo vrstve.
 
@@ -71,7 +70,7 @@ Viacvrstvová neurónová sieť vznikne spojením niekoľkých vrstiev. Nižšia
 
 Viacvrstvová sieť umožňuje riešiť problémy, ktoré jedna vrstva riešiť nedokáže. Jedným z~nich je napríklad funkcia \textit{xor} \cite[s. 197]{haykin1999neural}. Vo všeobecnosti sa viacvrstvová sieť dokáže naučiť aj súvislosti medzi vstupmi.
 
-Viacvrstvové neurónové siete sa trénujeme algoritmom backpropagation\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
+Viacvrstvové neurónové siete trénujeme pomocou algoritmu \textit{backpropagation}\footnote{algoritmus spätného šírenia chyby} \cite{haykin1999neural,dominika2011neural}.
 
 %
 %\section{Rekurentná neurónová sieť}\label{chap:rnn}

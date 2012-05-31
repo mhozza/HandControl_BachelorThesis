@@ -3,17 +3,17 @@
 V~tejto kapitole sa budeme venovať použitej platforme, jazyku a knižniciam. Vysvetlíme dôvody, prečo sme si ich vybrali.
 \bigskip
 
-Vhodnou platformou pre vývoj aplikácií, ktoré pracujú s~perifériami je Linux, pretože sú dostupné otvorené ovládače a vynikajúca podpora. S~perifériami sa pracuje v~Linuxe veľmi pohodlne, každé zariadenie má vlastný súbor, ktorý sa nachádza v~{\tt /dev/}.
+Vhodnou platformou pre vývoj aplikácií, ktoré pracujú s~perifériami je Linux, pretože má dostupné otvorené ovládače a vynikajúcu podporu. V~Linuxe sa pracuje s~perifériami veľmi pohodlne, každé zariadenie má vlastný súbor, ktorý sa nachádza v~{\tt /dev/}.
 
-Keďže Linux je písaný hlavne v~jazyku C, prevažná väčšina knižníc pre Linux sa dodáva aj s~hlavičkovými súbormi pre jazyk C a C++.
-Preto je jazyk C++ veľmi vhodný pre programovanie pre túto platformu. Okrem toho má vynikajúcu podporu, kvalitný kompilátor a je objektovo orientovaný, čo umožňuje jednoduché použitie komplexných dátových štruktúr. Vďaka vysokej podpore na rôznych platformách, nie je problém po prispôsobení niektorých častí aplikácie, preportovať ju aj na iné platformy.
+Linux je písaný hlavne v~jazyku C, preto prevažná väčšina knižníc pre Linux je dodávaná aj s~hlavičkovými súbormi pre jazyk C a C++.
+Jazyk C++ je preto veľmi vhodný pre programovanie na tejto platforme. Jazyk C++ má taktiež vynikajúcu podporu, kvalitný kompilátor a je objektovo orientovaný, čo umožňuje jednoduché použitie komplexných dátových štruktúr. Vďaka vysokej podpore C++ na rôznych platformách, nie je problém po prispôsobení niektorých častí aplikácie, preniesť ju aj na iné platformy.
 
 Programovanie a prácu nám uľahčia už hotové knižnice. Na užívateľské rozhranie použijeme framework \textit{Qt}, ktorý je multiplatformový a umožňuje jednoduchú prácu s~oknami a ďalším GUI. Okrem toho obsahuje aj triedy umožňujúce ľahkú správu vláken a mnohé iné.
 
 Ďalej využijeme linuxovú knižnicu \textit{v4l2}\footnote{video for linux 2}, ktorá je určená na prácu s~webovou kamerou a je štandardnou súčasťou väčšiny Linuxových distribúcií.
 
-Na počítanie fourierovej transformácie využijeme rýchlu knižnicu \textit{fftw3} a na simuláciu stlačení kláves knižnicu \textit{Xtst}, ktorá umožňuje simuláciu udalostí v~X-serveri.
+Na počítanie Fourierovej transformácie využijeme rýchlu knižnicu \textit{fftw3} a na simuláciu stlačení klávesov knižnicu \textit{Xtst}, ktorá umožňuje simuláciu udalostí v~X-serveri.
 
-Naša aplikácia využíva niekoľko vláken, aby mohla paralelizovať niektoré výpočty. Správa vláken sa vykonáva pomocou \textit{Qt} frameworku. Paralelizuje sa hlavne predspracovanie obrázkov a segmentov(kapitola \ref{chap:imageprocess}).
+Naša aplikácia využíva niekoľko vlákien, aby mohla paralelizovať niektoré výpočty. Správa vlákien sa vykonáva pomocou \textit{Qt} frameworku. Paralelizuje sa hlavne predspracovanie obrázkov a segmentov(kapitola \ref{chap:imageprocess}).
 
 

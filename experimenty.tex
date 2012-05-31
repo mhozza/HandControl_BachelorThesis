@@ -1,15 +1,15 @@
 \chapter{Experimenty}
 \label{chap:experiments}
 
-V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, porovnáme ich úspešnosť a ukážeme, ktorá z~nich je najvhodnejšia. Ďalej sa budeme venovať aj predspracovaniu segmentov, ktoré priamo ovplyvňuje vlastnosti trénovania a úspešnosť sietí.
+V~tejto kapitole porovnáme jednotlivé typy architektúr neurónových sietí, porovnáme ich úspešnosť a ukážeme, ktorá z~nich je najvhodnejšia. Ďalej sa budeme venovať predspracovaniu segmentov, ktoré priamo ovplyvňuje vlastnosti trénovania a úspešnosť sietí.
 \bigskip
 
-\section{Trénovanie}
+\section{Trénovanie sietí}
 
 %TODO treba citaciu?
 Trénovanie dopredných sietí sme robili pomocou algoritmu \textit{backpropagation} - algoritmu spätného šírenia chyby \cite{haykin1999neural}. Sieti sme postupne predkladali dáta s~informáciou, či sa jedná o~ruku alebo nie. Pred každou epochou sme dáta náhodne preusporiadali. 
 
-Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme updatli len v~prípade, že sme rozpoznali ruku. Po každej postupnosti sme rekurentné vstupy resetli na 0. Takto simulujeme správanie siete v~reálnej aplikácii. Aj pri tomto type sietí sme mali k~dispozícii informáciu či sa jedná o~ruku, alebo nie.
+Pri rekurentných sieťach sme predkladali postupnosti dát, pričom sme zachovávali poradie obrázkov v~postupnosti. Rekurentné vstupy sme aktualizovali len v~prípade, že sme rozpoznali ruku. Po každej postupnosti sme rekurentné vstupy resetovali na 0. Takto simulujeme správanie siete v~reálnej aplikácii. Aj pri tomto type sietí sme mali k~dispozícii informáciu či sa jedná o~ruku, alebo nie.
 
 \section{Testovanie a vyhodnocovanie neurónových sietí}
 Pri trénovaní sa snažíme minimalizovať kvadratickú chybu. Preto aj pri vyhodnocovaní úspešnosti sietí budeme používať túto metriku.
@@ -20,13 +20,13 @@ $t$ je cieľová hodnota a $o$ je výstup siete. V~tabuľkách budeme uvádzať 
 \section{Trénovacie a testovacie dáta}
 \label{chap:data}
 
-Na generovanie dát sme použili upravenú verziu našej aplikácie (kapitola \ref{chap:saveimageapp}), ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k~výraznému spomaleniu. 
+Na generovanie dát sme použili upravenú verziu našej aplikácie (kapitola \ref{chap:saveimageapp}), ktorá umožňovala ukladanie vysegmentovaných obrázkov na disk bez toho, aby došlo k~výraznému spomaleniu aplikácie. 
 
 Trénovacie dáta sme rozdelili na dve sady. Každá sada bola rozdelená na dve disjunktné množiny -- trénovaciu a testovaciu. Ku každému vstupu sme mali informáciu, či sa jedná o~ruku, alebo nie.
 
-Prvou sadou sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožňovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky. Na jednu postupnosť pripadá v~priemere približne 11 obrázkov. Sada obsahuje rozdielové obrázky\footnote{kapitola \ref{chap:diffimg}} a k~nim zodpovedajúce fourierove transformácie.
+Pomocou prvej sady sme vyhodnocovali vlastnosti rôznych typov architektúr neurónových sietí a vplyv Fourierovej transformácie. Obsahovala dáta, ktoré boli rozdelené do postupností. To nám umožňovalo trénovať nimi rekurentné neurónové siete. Dopredné siete tieto dáta brali ako jednotlivé obrázky. Na jednu postupnosť pripadá v~priemere približne 11 obrázkov. Sada obsahuje rozdielové obrázky\footnote{kapitola \ref{chap:diffimg}} a k~nim zodpovedajúce Fourierove transformácie.
 
-Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z~tejto sady boli vyňaté obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v~ideálnych prípadoch. Sada obsahuje rozdielové obrázky, k~nim zodpovedajúce pôvodné obrázky a fourierove transformácie zodpovedajúce obom typom.
+Druhá sada bola špecializovaná na vyhodnocovanie použitia pôvodného vs. rozdielového obrázka. Z~tejto sady boli vyňaté tie obrázky rúk, ktoré sa nepodarilo algoritmu floodfill správne vyselektovať. Porovnávali sme teda úspešnosti v~ideálnych prípadoch. Sada obsahuje rozdielové obrázky, k~nim zodpovedajúce pôvodné obrázky a Fourierove transformácie zodpovedajúce obom typom.
 
 \begin{table}[h]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -49,9 +49,9 @@ Keďže obrázkov rúk je v~dátach menej ako ostatných a sieť, ktorá by na v
 \section{Porovnanie architektúr neurónových sietí}
 \label{chap:experiments_arch}
 
-\subsection{Typ 1: Viac vrstvová dopredná neurónová sieť}
+\subsection{Typ 1: Viacvrstvová dopredná neurónová sieť}
 
-Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha -- nedarilo sa nám ju natrénovať. V~tabuľke \ref{tab:neuroncountcmp} uvádzame úspešnosti pre 2-vrstvovú sieť na dátach fourierovych transformácií.
+Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a tretia vrstva nepomáha -- nedarilo sa nám ju natrénovať. V~tabuľke \ref{tab:neuroncountcmp} uvádzame úspešnosti pre 2-vrstvovú sieť na dátach Fourierovych transformácií.
 
 \begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -75,9 +75,9 @@ Experimentálne sme zistili, že dvojvrstvová sieť na tento problém stačí a
 
 Môžeme si všimnúť, že pridávanie neurónov donekonečna nemusí pomôcť a zbytočne veľa neurónov môže aj uškodiť.
 
-\subsection{Typ 2: Upravená verzia viac vrstvovej doprednej neurónovej siete}
+\subsection{Typ 2: Upravená verzia viacvrstvovej doprednej neurónovej siete}
 
-Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v~tabuľke \ref{tab:neuroncountcmp2} sa budú teda vyskytovať obe. Vrstvy sú sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v~zátvorke počet neurónov na jednu časť obrázka.
+Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúry, v~tabuľke \ref{tab:neuroncountcmp2} sa teda budú vyskytovať obe. Vrstvy sú písané od najvrchnejšej po najspodnejšiu. Pri spodnej vrstve je v~zátvorke počet neurónov na jednu časť obrázka.
 
 \begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -100,7 +100,7 @@ Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúr
 7; 320(20)& 65,84& 0,1156 & 99,91 & 0,0009\\ \hline 
 11; 112(7)& 64,1 & 0,1108 & 99,91 & 0,0004 \\ \hline
 12; 144(9)& 66,27 & 0, 0978 & 99,74 & 0,003 \\ \hline
-12; 480(30)& 67.24 & 0,0983 & 99,53 & 0,0023 \\ \hline 
+12; 480(30)& 67,24 & 0,0983 & 99,53 & 0,0023 \\ \hline 
 13; 208(13)& 63,86 & 0,1001 & 99,33 & 0,0036 \\ \hline 
 17; 112(7)& 62,52 & 0,1043 & 100 & 0,0023 \\ \hline
 \end{tabular}
@@ -108,7 +108,7 @@ Pri tomto type siete sa nám podarilo natrénovať 2 aj 3-vrstvové architektúr
 \label{tab:neuroncountcmp2}
 \end{table}
 
-Všimnime si že tretia vrstva nám v~úspešnosti veľmi nepomohla, hoci skrátila dobu trénovania -- stačila asi 1/4 epoch oproti 2 vrstvám. Keďže ale v~praxi je pridanie ďalšej vrstvy spomalením, tak dve vrstvy budú v~tomto prípade lepšie.
+Všimnime si že tretia vrstva nám v~úspešnosti veľmi nepomohla, hoci skrátila dobu trénovania -- stačila asi 1/4 epoch oproti 2 vrstvám. Keďže je v~praxi pridanie ďalšej vrstvy spomalením, dve vrstvy budú v~tomto prípade lepšie.
 
 Oproti sieťam typu 1, vidíme určitý nárast úspešností o~2,4 percentuálnych bodov, pričom sieť obsahuje menej váh, čiže sa rýchlejšie trénuje aj rýchlejšie počíta.
 
@@ -159,7 +159,7 @@ Ani v~tomto prípade nám nepomohla ďalšia vrstva. Pri 2-vrstvových architekt
 
 \subsection{Zhrnutie}
 
-Vylepšeniami architektúry sa nám podarilo zdvihnúť úspešnosť o~\textbf{2,81} percentuálnych bodov a nájsť architektúru s~úspešnosťou \textbf{67,88\%}. Ukázalo sa, že je lepšie použiť 2-vrstvovú sieť ako 3-vrstvovú. Ďalej sme zistili, že keď budú mať neuróny prístup len k~časti obrázka, môžeme ich použiť viac a dosiahnuť lepšiu úspešnosť. Nakoniec sa nám podarilo ukázať, že pridaním rekurentných spojení na spodnú vrstvu dokážeme ešte trochu zvýšiť úspešnosť.
+Vylepšeniami architektúry sa nám podarilo zvýšiť úspešnosť o~\textbf{2,81} percentuálnych bodov a nájsť architektúru s~úspešnosťou \textbf{67,88\%}. Ukázalo sa, že je lepšie použiť 2-vrstvovú sieť ako 3-vrstvovú. Ďalej sme zistili, že keď budú mať neuróny prístup len k~časti obrázka, môžeme ich použiť viac a dosiahnuť lepšiu úspešnosť. Nakoniec sa nám podarilo ukázať, že pridaním rekurentných spojení na spodnú vrstvu dokážeme ešte trochu zlepšiť úspešnosť.
 
 Úspešnosť na rukách sa pohybovala okolo 40-50\% a na ostatných obrázkoch 80-90\%. Sieť teda dokáže dobre odfiltrovať zlé obrázky, pričom má pomerne dobrú úspešnosť aj na rukách.
 
@@ -167,7 +167,7 @@ Vylepšeniami architektúry sa nám podarilo zdvihnúť úspešnosť o~\textbf{2
 
 \subsection{Vplyv Fourierovej transformácie}
 
-Pre porovnanie fourierovej transformácie a rozdielových obrázkov sme použili 3-vrstvovú upravenú neurónovú sieť. Vybrali sme ju pre to, že 2-vrstvovú sa nám na rozdielových obrázkoch nepodarilo natrénovať. Ani pri tejto architektúre sa nám však nedarili sieť natrénovať na úspešnosť viac ako 71\%. Už z~toho je vidieť výhoda fourierovej transformácie. Počty neurónov sme vybrali tie, ktoré dopadli v~predošlom teste najlepšie (tabuľka \ref{tab:neuroncountcmp2}) -- [7; 112(7)] a [7; 176(11)].
+Pre porovnanie Fourierovej transformácie a rozdielových obrázkov sme použili 3-vrstvovú upravenú neurónovú sieť. Vybrali sme ju preto, lebo 2-vrstvovú sa nám na rozdielových obrázkoch nepodarilo natrénovať. Ani pri tejto architektúre sa nám však nedarilo sieť natrénovať na úspešnosť viac ako 71\%. Už z~toho vidno výhodu Fourierovej transformácie. Počty neurónov sme vybrali také, ktoré dopadli v~predošlom teste najlepšie (tabuľka \ref{tab:neuroncountcmp2}) -- [7; 112(7)] a [7; 176(11)].
 
 \begin{table}[htp]
 \catcode`\-=12 %kvoli babelu a pomlcke
@@ -187,7 +187,7 @@ Pre porovnanie fourierovej transformácie a rozdielových obrázkov sme použili
 \end{table}
 
 Z~tabuľky \ref{tab:neuraldataftcmp} je vidieť zlepšenie o~2 percentuálne body pri použití Fourierovej transformácie. Okrem toho nám
-Fourierova transformácia dáva potenciál zdvihnúť úspešnosť pri väčšom množstve trénovacích dát a širšie možnosti trénovania. 
+Fourierova transformácia dáva potenciál zdvihnúť úspešnosť pri väčšom množstve trénovacích dát a širšie možnosti trénovania neurónových sietí. 
 
 \subsection{Rozdielový vs. pôvodný obraz}
 
@@ -210,10 +210,10 @@ Pri tomto teste sme použili na trénovanie a testovanie \textit{sadu 2} (kapito
 \label{tab:neuraldatacmp}
 \end{table}
 
-Z~tabuľky \ref{tab:neuraldatacmp} je vidieť, že úspešnosť siete na dátach pôvodného obrázka je značne nižšia ako na rozdielovom obrázku a to aj pri použití fourierovej transformácie. Z~toho vyplýva že tento typ dát nie je vhodný.
+Z~tabuľky \ref{tab:neuraldatacmp} je vidieť, že úspešnosť siete na dátach pôvodného obrázka je značne nižšia ako na rozdielovom obrázku a to aj pri použití Fourierovej transformácie. Z~toho vyplýva že tento typ dát nie je vhodný.
 
 \subsection{Zhrnutie}
 
-Z~tabuliek vidíme, že Fourierova transformácia pomáha nie len pri trénovaní, ale aj pri celkovej úspešnosti neurónovej siete. Sieť je možné rýchlejšie a lepšie natrénovať a trénovať aj na väčších dátach.
+Z~tabuliek vidíme, že Fourierova transformácia pomáha nielen pri trénovaní, ale aj pri celkovej úspešnosti neurónovej siete. Sieť je možné rýchlejšie a lepšie natrénovať a trénovať aj na väčších dátach.
 
-Dáta získané na základe pôvodného obrázka sa ukázali ako nevhodné, sieť sa na nich veľmi ťažko učí a ani Fourierova transformácia na týchto dátach nedosahuje takú vysokú úspešnosť ako z~rozdielového obrázka. Preto sme sa rozhodli v~aplikácii tento prístup nepoužiť.
+Dáta získané na základe pôvodného obrázku sa ukázali ako nevhodné, sieť sa na nich veľmi ťažko učí a ani Fourierova transformácia na týchto dátach nedosahuje takú vysokú úspešnosť ako z~rozdielového obrázka. Preto sme sa rozhodli v~aplikácii tento prístup nepoužiť.
